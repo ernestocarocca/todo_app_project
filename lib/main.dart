@@ -8,6 +8,8 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   //Detta är en testkommentar
 
+  // test
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
