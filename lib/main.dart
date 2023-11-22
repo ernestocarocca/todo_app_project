@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
 
-void main() {
-  runApp(const MyApp());
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferencesManager.init();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,7 +17,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+   return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           useMaterial3: true,
@@ -20,6 +25,7 @@ class MyApp extends StatelessWidget {
         home: const MyHomePage(
           title: 'main',
         ));
+
   }
 }
 
@@ -33,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   int currenntPage = 0;
   List<Widget> pages = const [
     OverviewPage(),
@@ -58,5 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedIndex: currenntPage,
       ),
     );
+
   }
 }
