@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferencesManager.init();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  //Detta är en testkommentar
-
-  // test
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
- 
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Todoapp'),
-    );
+    return MaterialApp(title: 'Flutter Demo', home: TextFieldScreen()
+        // MyHomePage(title: 'Todoapp'),
+        );
   }
 }
 
@@ -34,14 +29,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
-
-
   @override
   Widget build(BuildContext context) {
- 
-    return Scaffold();
-    
+    return const Scaffold();
   }
 }
