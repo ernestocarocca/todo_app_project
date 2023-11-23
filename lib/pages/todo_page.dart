@@ -11,6 +11,6 @@ class TodoPage extends StatefulWidget {
 class _nameState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('ToDo Page'),);;
+    return const Center(child: Text('ToDo Page'),);
   }
 }

@@ -8,7 +8,7 @@ import 'package:todo_app_project/pages/overview_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferencesManager.init();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -41,9 +41,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   int currenntPage = 0;
-  List<Widget> pages = const [
+  List<Widget> pages = [
     OverviewPage(),
-    AddTodoPage()
+   AddTodoPage()
   ];
   @override
   Widget build(BuildContext context) {
