@@ -22,5 +22,5 @@ class SharedPreferencesManager {
 
   static Future setTodos(List<String> todoList) async =>
       await _preferences.setStringList(_keysTodos, todoList);
-  static List<String>? getTodos() => _preferences.getStringList(_keysTodos);
+  static List<String>? getTodos(List<String> getTodoList) => _preferences.getStringList(_keysTodos);
 }
