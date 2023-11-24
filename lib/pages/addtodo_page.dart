@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
@@ -9,7 +10,6 @@ class AddTodoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.cyan,
         title: const Text('Addtodos'),
       ),
       body: TaskList(),
@@ -23,15 +23,17 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
+  SharedPreferences prefs = SharedPreferencesManager.preferences;
   late TextEditingController textEditingController;
   List<String> getTodoList = [];
   late final String label;
-  String name = '';
+  String todo = '';
   @override
   void initState() {
     super.initState();
     textEditingController = TextEditingController();
-    getTodoList = SharedPreferencesManager.getTodos(getTodoList) ??
+
+    getTodoList = SharedPreferencesManager.getTodos() ??
         []; // Ernesto: init when page renders
   }
 
@@ -40,18 +42,17 @@ class _TaskListState extends State<TaskList> {
       controller: textEditingController,
       decoration: const InputDecoration(
         hintText: 'Write something...',
+
         // Other decoration properties if needed
       ),
     );
   }
 
-  void setTodoText() {}
+  // void setTodoText() {}
 
-  generateTodos() {
-    for (String todos in getTodoList) {
-      String todo = todos;
-      return todo;
-    }
+  void cleartodos() {
+    //SharedPreferences prefs = SharedPreferencesManager.preferences;
+    prefs.setStringList('todos', []);
   }
 
   @override
@@ -65,49 +66,71 @@ class _TaskListState extends State<TaskList> {
     return Scaffold(
       body: Column(
         children: [
-        buildTextField(),
-          buttonGetFromSherePref(getTodoList, textEditingController.text)
+          const SizedBox(height: 32),
+          buildName(),
+          // buildTextField(),
+          const SizedBox(height: 32),
+          buildButtonSharePrev(),
         ],
       ),
     );
   }
-}
+
+// textfield that takes in a value and sets it for saving in Shpref uses BuildTitelWigget
+  Widget buildName() => buildTitle(
+        title: 'your Todos',
+        child: TextFormField(
+          initialValue: todo,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Your Name',
+          ),
+          onChanged: (todo) => setState(() => this.todo = todo),
+        ),
+      );
 
 // Ernesto: add todos in a list
-Widget buttonGetFromSherePref(
-        List<String> getTodoList, String textEditingController) =>
-    ButtonWidget(
-      InputTodoText: textEditingController,
+  Widget buildButtonSharePrev() => ButtonWidget(
       text: 'save',
       onClicked: () async {
-        getTodoList.add(textEditingController);
-        await SharedPreferencesManager.setTodos(getTodoList);
-        print(getTodoList[5]);
-      },
-    );
+        String inputTodoText = todo;
+        if (inputTodoText.isNotEmpty) {
+          getTodoList.add(inputTodoText);
+          SharedPreferencesManager.setTodos(getTodoList);
+          SharedPreferencesManager.getTodos();
+          for (String todos in getTodoList) {
+            print(todos);
+          }
+     
+//gettime in future put it here
+        }
+      });
 
-/*
-// Ernesto: Forlop that gets each string in a list
-Widget createTextList(String todo) {
-  //List<String> textWidgets = [];
-  String names = '';
-  for (String todos in getTodoList) {
-    names = todos;
-  }
-
-  return Text(names);
+  Widget buildTitle({
+    required String title,
+    required Widget child,
+  }) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          child,
+        ],
+      );
 }
-*/
-//Ernesto button class that is the bluprint for buttonGetFromSherePref
+
 class ButtonWidget extends StatelessWidget {
   final String text;
   final VoidCallback onClicked;
-  final String InputTodoText;
+
   const ButtonWidget({
     Key? key,
     required this.text,
     required this.onClicked,
-    required this.InputTodoText,
   }) : super(key: key);
 
   @override
@@ -130,6 +153,8 @@ class ButtonWidget extends StatelessWidget {
         ),
       );
 }
+
+
 
 /*
 
