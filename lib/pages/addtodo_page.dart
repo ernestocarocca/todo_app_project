@@ -6,6 +6,10 @@ class AddTodoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Add ToDo Page'),);
+    return const Scaffold(
+    
+    );
+    
+   
   }
 }

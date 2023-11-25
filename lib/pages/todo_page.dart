@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 
-class TodoPage extends StatefulWidget {
-  const TodoPage({super.key});
+class ToDoPage extends StatelessWidget {
+  const ToDoPage({Key? key}) : super(key: key);
 
-  @override
-  State<TodoPage> createState() => _nameState();
-}
-
-class _nameState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('ToDo Page'),);;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('ToDo Page'),
+      ),
+      // TODO: Add your ToDoPage UI here
+    );
   }
 }
