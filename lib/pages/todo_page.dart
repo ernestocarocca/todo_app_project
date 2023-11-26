@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app_project/pages/edittodo_page.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
 class ToDoPage extends StatelessWidget {
@@ -29,7 +30,7 @@ class ToDoPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.blue, Color.fromARGB(255, 51, 167, 159)], 
+            colors: [Colors.blue, Color.fromARGB(255, 22, 9, 80)],
           ),
         ),
         child: ListView.builder(
@@ -52,6 +53,14 @@ class ToDoPage extends StatelessWidget {
                   todoItem.description,
                   style: const TextStyle(fontSize: 14.0),
                 ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const EditToDo(),
+                    ),
+                  );
+                },
               ),
             );
           },

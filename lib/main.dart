@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
@@ -6,8 +7,12 @@ import 'package:todo_app_project/pages/todomodel_page.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ToDoModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ToDoModel()),
+        ChangeNotifierProvider(create: (context) => InProgressModel()),
+        ChangeNotifierProvider(create: (context) => DoneModel()),
+      ],
       child: const MyApp(),
     ),
   );
