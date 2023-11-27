@@ -5,7 +5,7 @@ import 'package:todo_app_project/pages/overview_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferencesManager.init();
+  // await SharedPreferencesManager.init();
   runApp(const MyApp());
 }
 
