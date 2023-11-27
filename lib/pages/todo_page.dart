@@ -69,7 +69,7 @@ class ToDoPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const EditToDo(),
+                      builder: (BuildContext context) =>  EditTodoPage(),
                     ),
                   );
                 },
