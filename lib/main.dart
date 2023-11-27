@@ -4,8 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
+import 'package:todo_app_project/pages/edittodo_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferencesManager.init();
   runApp(
     MultiProvider(
       providers: [
@@ -16,27 +20,30 @@ void main() {
       child: const MyApp(),
     ),
   );
+
+
+
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
-        home: const MyHomePage(
-          title: 'main',
-        ));
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(
+        title: 'main',
+      ),
+    );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({Key? key, required this.title});
 
   final String title;
 
@@ -45,29 +52,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int currenntPage = 0;
-  List<Widget> pages = const [
-    OverviewPage(),
-    AddTodoPage()
-  ];
+  int currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      OverviewPage(),
+      AddTodoPage(),
+      EditTodoPage(),
+    ];
+
     return Scaffold(
-      body: pages[currenntPage],
+      body: pages[currentPage],
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
-              icon: Icon(Icons.horizontal_split_rounded), label: 'Overview'),
+            icon: Icon(Icons.horizontal_split_rounded),
+            label: 'Overview',
+          ),
           NavigationDestination(
-              icon: Icon(Icons.note_add), label: 'Add todo'),
+            icon: Icon(Icons.note_add),
+            label: 'Add todo',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.edit),
+            label: 'Edit todo',
+          ),
         ],
-        onDestinationSelected: (int index){
+        onDestinationSelected: (int index) {
           setState(() {
-            currenntPage = index;
+            currentPage = index;
           });
-          
         },
-        selectedIndex: currenntPage,
+        selectedIndex: currentPage,
       ),
     );
   }
