@@ -10,7 +10,7 @@ class ToDoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var toDoModel = Provider.of<ToDoModel>(context);
 
-    // Sample data for testing
+    // Sample data for testings
     var sampleData = [
       ToDoItem(
           title: 'Handla',
