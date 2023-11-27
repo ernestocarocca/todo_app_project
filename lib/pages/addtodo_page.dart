@@ -35,6 +35,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo Page'),
@@ -112,5 +113,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
     setState(() {
       todoList[index].isCrossed = !todoList[index].isCrossed;
     });
+
   }
 }
