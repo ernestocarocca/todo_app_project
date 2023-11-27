@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class ToDoItem {
   final String title;
   final String description;
+  final String imageUrl;
 
-  ToDoItem({required this.title, required this.description});
+  ToDoItem({required this.title, required this.description, required this.imageUrl});
 }
 
 class ToDoModel extends ChangeNotifier {

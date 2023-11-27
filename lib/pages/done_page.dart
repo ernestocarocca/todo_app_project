@@ -12,9 +12,9 @@ class DonePage extends StatelessWidget {
 
     // Sample data for testing
     var sampleData = [
-      DoneItem(title: 'Completed Task 1', description: 'Description for Task 1'),
-      DoneItem(title: 'Completed Task 2', description: 'Description for Task 2'),
-      DoneItem(title: 'Completed Task 3', description: 'Description for Task 3'),
+      DoneItem(title: 'title', description: 'Description blal'),
+      DoneItem(title: 'title plugga', description: 'Description blalan'),
+      DoneItem(title: 'Completed hamster', description: 'Description ubcs'),
     ];
 
     // Add sample data to the DoneModel

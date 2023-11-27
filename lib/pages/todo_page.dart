@@ -12,9 +12,21 @@ class ToDoPage extends StatelessWidget {
 
     // Sample data for testing
     var sampleData = [
-      ToDoItem(title: 'Handla', description: 'mjölk'),
-      ToDoItem(title: 'träna', description: 'knäböj'),
-      ToDoItem(title: 'städa', description: 'sopa'),
+      ToDoItem(
+          title: 'Handla',
+          description: 'mjölk',
+          imageUrl: ('images/testimage.jpg')),
+        
+      ToDoItem(
+          title: 'träna',
+          description: 'knäböj',
+          imageUrl:
+              'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
+      ToDoItem(
+          title: 'städa',
+          description: 'sopa',
+          imageUrl:
+              'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
     ];
 
     // Add sample data to the ToDoModel
@@ -61,6 +73,12 @@ class ToDoPage extends StatelessWidget {
                     ),
                   );
                 },
+                leading: Image.network(
+                  todoItem.imageUrl,
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
               ),
             );
           },
