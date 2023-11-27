@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
@@ -22,7 +21,6 @@ Future<void> main() async {
   );
 
 
-
 }
 
 class MyApp extends StatelessWidget {
@@ -30,6 +28,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -52,6 +51,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   int currentPage = 0;
 
   @override
@@ -67,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
+
             icon: Icon(Icons.horizontal_split_rounded),
             label: 'Overview',
           ),
@@ -78,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.edit),
             label: 'Edit todo',
           ),
+
         ],
         onDestinationSelected: (int index) {
           setState(() {

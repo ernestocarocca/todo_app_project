@@ -8,6 +8,7 @@ class ToDoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     var toDoModel = Provider.of<ToDoModel>(context);
 
     // Sample data for testings
@@ -85,5 +86,6 @@ class ToDoPage extends StatelessWidget {
         ),
       ),
     );
+
   }
 }
