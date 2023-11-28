@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
-import 'package:todo_app_project/mobile_storage/shared_pref.dart';
-import 'package:todo_app_project/pages/edittodo_page.dart';
 
+import 'package:todo_app_project/pages/edittodo_page.dart';
+//hej
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferencesManager.init();
+
   runApp(
     MultiProvider(
       providers: [
@@ -19,8 +19,6 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
-
-
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +26,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -51,7 +48,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   int currentPage = 0;
 
   @override
@@ -67,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: NavigationBar(
         destinations: const [
           NavigationDestination(
-
             icon: Icon(Icons.horizontal_split_rounded),
             label: 'Overview',
           ),
@@ -79,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.edit),
             label: 'Edit todo',
           ),
-
         ],
         onDestinationSelected: (int index) {
           setState(() {
