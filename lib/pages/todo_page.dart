@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/edittodo_page.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
@@ -36,6 +37,26 @@ class ToDoPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo Page'),
+        centerTitle: true,
+         actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 16.0),
+          child: IconButton(
+            icon: const Icon(Icons.post_add,
+            size: 38,
+            color: Colors.blue,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AddTodoPage(),
+                ),
+              );
+            },
+          ),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
