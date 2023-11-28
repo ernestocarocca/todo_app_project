@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
 import 'package:todo_app_project/pages/edittodo_page.dart';
+
 //hej
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(
     MultiProvider(
       providers: [
@@ -27,14 +27,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(
-        title: 'main',
-      ),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          useMaterial3: true,
+        ),
+        home: SavedDataScreen() //MyHomePage(
+        // title: 'main',
+        //),
+        );
   }
 }
 
@@ -49,12 +49,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentPage = 0;
+  @override
+  void initState() {
+    super.initState();
+    initShareprefs();
+  }
+
+  Future<void> initShareprefs() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await TodosManager.init();
+    setState(() {
+      print('inintprefs run in start');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
-      OverviewPage(),
-      AddTodoPage(),
+      const OverviewPage(),
+      const AddTodoPage(),
       EditTodoPage(),
     ];
 

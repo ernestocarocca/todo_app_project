@@ -90,7 +90,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
                       onTap: () {
                         _confirmDelete(index);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.delete,
                         color: Colors.red,
                       ),
@@ -108,7 +108,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
   void _editTodo(int index, {required bool isTitle}) async {
     String currentValue = isTitle ? todoList[index].title : todoList[index].description;
     TextEditingController textController = TextEditingController(text: currentValue);
-
+// Ernesto catch if String value is not empty (null)
     String newValue = await showDialog(
       context: context,
       builder: (BuildContext context) {

@@ -16,12 +16,12 @@ class ToDoModel extends ChangeNotifier {
 
   void addTodoItem(ToDoItem todoItem) {
     _toDoList.add(todoItem);
-    notifyListeners();
+  // notifyListeners();
   }
 
   void addTodoItems(List<ToDoItem> todoItems) {
     _toDoList.addAll(todoItems);
-    notifyListeners();
+  //notifyListeners();
   }
 }
 
@@ -42,12 +42,12 @@ class InProgressModel extends ChangeNotifier {
 
   void addTodoItem(InProgressItem inprogressItem) {
     _inProgressList.add(inprogressItem);
-    notifyListeners();
+ //   notifyListeners();
   }
 
   void addInProgressItems(List<InProgressItem> inprogressItems) {
     _inProgressList.addAll(inprogressItems);
-    notifyListeners();
+   // notifyListeners(); Ernesto: gör så appen krashar måste hanteras
   }
 }
 
@@ -71,7 +71,7 @@ class DoneModel extends ChangeNotifier {
 
   void addDoneItems(List<DoneItem> doneItems) {
     _doneList.addAll(doneItems);
-    notifyListeners();
+    //notifyListeners(); Ernesto: notifyListeners() i addDoneItems  gör så appen krashar måste hanteras
   }
 }
 

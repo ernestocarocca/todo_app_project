@@ -1,25 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class TodoItem {
-  bool isCrossed;
-  String title;
-  String description;
-
-  TodoItem({required this.isCrossed, required this.title, required this.description});
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const AddTodoPage(),
-    );
-  }
-}
+//Ernesto: moved TodoItem class to Shae_pref file
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({Key? key}) : super(key: key);
@@ -29,60 +14,111 @@ class AddTodoPage extends StatefulWidget {
 }
 
 class _AddTodoPageState extends State<AddTodoPage> {
+  final TodosManager todoManager = TodosManager();
+   List<TodoItem> _savedTodoItems = [];
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<TodoItem> todoList = [];
+  List<TodoItem> _todoItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
+    print('loaded in init');
+
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo Page'),
+        title: const Text('Todo Page'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              // Rensa listan när delete-ikonen trycks
+              todoList.clear();
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Title:'),
+            const Text('Title:'),
             TextField(
               controller: titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Enter title',
               ),
             ),
-            SizedBox(height: 16.0),
-            Text('Description:'),
+            const SizedBox(height: 16.0),
+            const Text('Description:'),
             TextField(
               controller: descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Enter description',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 _addTodo();
+
+                print(todoList.length);
+                print(todoList.indexed);
               },
-              child: Text('Add Todo'),
+              child: const Text('Add Todo'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
-                itemCount: todoList.length,
+                itemCount: _todoItems.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(todoList[index].title),
-                      subtitle: Text(todoList[index].description),
-                      trailing: GestureDetector(
-                        onTap: () {
-                          _toggleTodo(index);
-                        },
-                        child: Icon(
-                          todoList[index].isCrossed ? Icons.check_box : Icons.check_box_outline_blank,
-                          color: todoList[index].isCrossed ? Colors.green : null,
+                  final currentTodo = todoList[index];
+                  return Dismissible(
+                    key: Key(currentTodo.title),
+                    onDismissed: (direction) {
+                      setState(() {
+                        todoList.removeAt(index);
+                        _removeTodos(currentTodo);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("$currentTodo Deleted")));
+                    },
+                    background: Container(
+                      color: Colors.red,
+                      child: const Center(
+                          child: Text(
+                        "Deleted",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      )),
+                    ),
+                    child: Card(
+                      child: ListTile(
+                        title: Text(_savedTodoItems[index].title),
+                        subtitle: Text(_savedTodoItems[index].description),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            _toggleTodo(index);
+                          },
+                          child: Icon(
+                            todoList[index].isCrossed
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            color:
+                                todoList[index].isCrossed ? Colors.green : null,
+                          ),
                         ),
                       ),
                     ),
@@ -96,15 +132,74 @@ class _AddTodoPageState extends State<AddTodoPage> {
     );
   }
 
-  void _addTodo() {
+Future<void> _addItemToList() async {
+    String newItem = titleController.text.trim();
+    if (newItem.isNotEmpty) {
+      setState(() {
+        _savedTodoItems.last.todoList.add(newItem);
+      });
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      List<String> encodedItems = _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
+      prefs.setStringList('todoListKey', encodedItems);
+
+      descriptionController.clear();
+    }
+  }
+ Future<void> _addNewItem() async {
+    String title = titleController.text.trim();
+    String description = descriptionController.text.trim();
+ 
+
+    List<String> todoList = description.isNotEmpty ? description.split(",") : [];
+
+    TodoItem newItem = TodoItem(title, todoList, false, description);
+
+    setState(() {
+      _savedTodoItems.add(newItem);
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> encodedItems = _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
+    prefs.setStringList('todoListKey', encodedItems);
+
+    // Clear text fields after adding the new item
+    titleController.clear();
+    descriptionController.clear();
+   
+  }
+  // Ernesto sets todoList items to the saved todoItems in shareprefs
+  void _loadTodos() async {
+    List<TodoItem> todos = await TodosManager().getTodos();
+    final loadedTodos = await todoManager.getTodos();
+
+    setState(() {
+      _todoItems = todos;
+      todoList = loadedTodos;
+    });
+  }
+
+  void _removeTodos(TodoItem todo) async {
+    await todoManager.removeTodos(todo);
+    _loadTodos();
+  }
+
+  void _addTodo() async {
     String title = titleController.text.trim();
     String description = descriptionController.text.trim();
 
     if (title.isNotEmpty && description.isNotEmpty) {
       setState(() {
-        todoList.add(TodoItem(isCrossed: false, title: title, description: description));
+        List<String> todoList = [];
+        bool isCrossed = false;
+        List<TodoItem> todo = [
+          TodoItem(title, todoList, isCrossed, description)
+        ];
+        todoManager.addTodoList(todo);
+
         titleController.clear();
         descriptionController.clear();
+        _loadTodos();
       });
     }
   }
@@ -113,6 +208,5 @@ class _AddTodoPageState extends State<AddTodoPage> {
     setState(() {
       todoList[index].isCrossed = !todoList[index].isCrossed;
     });
-
   }
 }

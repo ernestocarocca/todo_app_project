@@ -1,63 +1,109 @@
 // ignore_for_file: unused_element
-import 'package:flutter/material.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Task {
+
+
+
+class TodoItem {
   final String title;
-  final bool isCompleted;
-
-  Task(this.title, this.isCompleted);
-
-  Map<String, dynamic> toJson() {
+  List<String> todoList; // Listan av uppgifter
+  bool isCrossed;
+  final String description;
+  TodoItem(
+    this.title,
+    this.todoList,
+    this.isCrossed,
+    this.description,
+  );
+  Map<String, Object> toJson() {
     return {
       'title': title,
-      'isCompleted': isCompleted,
+      'todoList': todoList,
+      'isCrossed': isCrossed,
+      'description': description,
     };
   }
+
+  factory TodoItem.fromMap(Map<String, dynamic> map) {
+    return TodoItem(
+      map['title'],
+      List<String>.from(map[
+          'todoList']), // Konvertera listan från dynamisk till en lista av strängar
+      map['isCrossed'],
+      map['description'],
+    );
+  }
 }
 
-class TaskManager {
-  static const _key = 'tasks';
+class TodosManager {
+  static late SharedPreferences _prefs;
+  static const _keyTodo = 'Todo';
 
-  Future<void> addTask(Task task) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> tasks = prefs.getStringList(_key) ?? [];
+  static Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+    print('SharedPreferences initialiserades');
+  }
+Future<void> addTodoList(List<TodoItem> todoList) async {
+  final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
 
-    tasks.add(json.encode(task.toJson()));
-
-    await prefs.setStringList(_key, tasks);
+  for (TodoItem todo in todoList) {
+    todos.add(json.encode(todo.toJson()));
   }
 
-  Future<void> removeTask(Task task) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> tasks = prefs.getStringList(_key) ?? [];
+  await _prefs.setStringList(_keyTodo, todos);
+}
 
-    tasks.removeWhere((taskJson) {
-      final taskData = json.decode(taskJson);
-      return taskData['title'] == task.title &&
-          taskData['isCompleted'] == task.isCompleted;
+
+
+ /*
+    final List<String> todos =
+        todoList.map((todo) => json.encode(todo.toJson())).toList();
+    await _prefs.setStringList(_keyTodo, todos);
+  } */
+
+  Future<void> removeTodos(TodoItem todo) async {
+    final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+
+    todos.removeWhere((taskJson) {
+      final todoData = json.decode(taskJson);
+      return todoData['title'] == todo.title &&
+          todoData['isCrossed'] == todo.isCrossed &&
+          todoData['description'] == todo.description;
     });
 
-    await prefs.setStringList(_key, tasks);
+    await _prefs.setStringList(_keyTodo, todos);
+  }
+Future<List<TodoItem>> getTodos() async {
+  final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+  List<TodoItem> todoItems = [];
+
+  for (String todoJson in todos) {
+    try {
+      final Map<String, dynamic> todoData = json.decode(todoJson);
+
+      // Kolla om strukturen är för det nya TodoItem-formatet med en lista av uppgifter
+      if (todoData.containsKey('title') &&
+          todoData.containsKey('todoList') &&
+          todoData.containsKey('isCrossed') &&
+          todoData.containsKey('description')) {
+        final TodoItem todoItem = TodoItem.fromMap(todoData);
+        todoItems.add(todoItem);
+      }
+    } catch (e) {
+      print('Fel vid avkodning av TodoItem: $e');
+    }
   }
 
-  Future<List<Task>> getTasks() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> tasks = prefs.getStringList(_key) ?? [];
-
-    return tasks.map((taskJson) {
-      final taskData = json.decode(taskJson);
-      return Task(taskData['title'], taskData['isCompleted']);
-    }).toList();
-  }
+  return todoItems;
 }
+}
+
+
 /*
 class SharedPreferencesManager {
   static late SharedPreferences _preferences;
@@ -82,46 +128,25 @@ class SharedPreferencesManager {
 */
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-class SharePrefAddTodoPage extends StatefulWidget {
-  const SharePrefAddTodoPage({Key? key}) : super(key: key);
 
-  @override
-  _SharePrefAddTodoPageState createState() => _SharePrefAddTodoPageState();
-}
 
-class _SharePrefAddTodoPageState extends State<SharePrefAddTodoPage> {
-  final TaskManager taskManager = TaskManager();
-  final TextEditingController taskController = TextEditingController();
-  List<Task> tasks = [];
 
-  late final String label;
-  String todo = '';
+
+  /*
   @override
   void initState() {
     super.initState();
     _loadTasks();
-    // textEditingController = TextEditingController();
+  }*/
 
-//    _getTodoList = SharedPreferencesManager.getTodos() ??
-    // []; // Ernesto: init when page renders
-  }
 
-  void _addTask() async {
-    final taskTitle = taskController.text;
-    if (taskTitle.isNotEmpty) {
-      final task = Task(taskTitle, false);
-      await taskManager.addTask(task);
-      taskController.clear();
-      _loadTasks();
-    }
-  }
-
+/*
   void _loadTasks() async {
     final loadedTasks = await taskManager.getTasks();
     setState(() {
       tasks = loadedTasks;
     });
-  }
+  }*/
 /*
   Widget buildTextField() {
     return Row(
@@ -139,20 +164,12 @@ class _SharePrefAddTodoPageState extends State<SharePrefAddTodoPage> {
     );
   }*/
 
-  // void setTodoText() {}
-  void _removeTask(Task task) async {
-    await taskManager.removeTask(task);
-    _loadTasks();
-  }
+
+
+ /*
 
   @override
-  void dispose() {
-    //  textEditingController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  => addTodoWidget{
     return Scaffold(
       body: Column(
         children: [
@@ -173,9 +190,12 @@ class _SharePrefAddTodoPageState extends State<SharePrefAddTodoPage> {
         ],
       ),
     );
-  }
+  } */
+  /*
 
   Widget addTodoWidget() {
+
+    requare 
     return Scaffold(
       appBar: AppBar(
         title: Text('Task List'),
@@ -219,8 +239,8 @@ class _SharePrefAddTodoPageState extends State<SharePrefAddTodoPage> {
         ],
       ),
     );
-  }
-
+  } */
+/*
 // textfield that takes in a value and sets it for saving in Shpref uses BuildTitelWigget
   Widget buildName() => buildTitle(
         title: 'add tour todo',
@@ -254,7 +274,7 @@ class _SharePrefAddTodoPageState extends State<SharePrefAddTodoPage> {
         ],
       );
 }
-
+/*
 class ButtonWidget extends StatelessWidget {
   final String text;
   final VoidCallback onClicked;
@@ -284,21 +304,128 @@ class ButtonWidget extends StatelessWidget {
           ),
         ),
       );
+} */
+
+
+
+*/
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'SharedPreferences Demo',
+      home: SavedDataScreen(),
+    );
+  }
 }
 
+class SavedDataScreen extends StatefulWidget {
+  @override
+  _SavedDataScreenState createState() => _SavedDataScreenState();
+}
 
+class _SavedDataScreenState extends State<SavedDataScreen> {
+  List<TodoItem> _savedTodoItems = [];
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _todoListController = TextEditingController();
 
-/*
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedData();
+  }
 
+  Future<void> _loadSavedData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> savedData = prefs.getStringList('todoListKey') ?? [];
 
+    setState(() {
+      _savedTodoItems = savedData
+          .map((item) => TodoItem.fromMap(json.decode(item)))
+          .toList();
+    });
+  }
 
+  Future<void> _addNewItem() async {
+    String title = _titleController.text.trim();
+    String description = _descriptionController.text.trim();
+    String todoListText = _todoListController.text.trim();
 
-class AddTodoPage extends StatelessWidget {
-  const AddTodoPage({super.key});
+    List<String> todoList = todoListText.isNotEmpty ? todoListText.split(",") : [];
+
+    TodoItem newItem = TodoItem(title, todoList, false, description);
+
+    setState(() {
+      _savedTodoItems.add(newItem);
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> encodedItems = _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
+    prefs.setStringList('todoListKey', encodedItems);
+
+    // Clear text fields after adding the new item
+    _titleController.clear();
+    _descriptionController.clear();
+    _todoListController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Add ToDo Page'),);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Saved Data'),
+      ),
+      body: ListView.builder(
+        itemCount: _savedTodoItems.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(_savedTodoItems[index].title),
+            subtitle: Text(_savedTodoItems[index].description),
+            trailing: Text(_savedTodoItems[index].todoList.join(", ")),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Add New Item'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _titleController,
+                      decoration: InputDecoration(labelText: 'Title'),
+                    ),
+                    TextField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(labelText: 'Description'),
+                    ),
+                    TextField(
+                      controller: _todoListController,
+                      decoration: InputDecoration(labelText: 'Todo List (Separate by comma)'),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _addNewItem();
+                    },
+                    child: Text('Save'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
+      ),
+    );
   }
 }
-*/
