@@ -14,25 +14,7 @@ class OverviewPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Overview Page'),
         centerTitle: true,
-        actions: [
-          Container(
-            padding: const EdgeInsets.only(right: 16.0),
-          child: IconButton(
-            icon: const Icon(Icons.post_add,
-            size: 38,
-            color: Colors.blue,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const AddTodoPage(),
-                ),
-              );
-            },
-          ),
-          ),
-        ],
+
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -43,8 +25,28 @@ class OverviewPage extends StatelessWidget {
           _buildButton(context, 'Done', Icons.check_circle, const DonePage()),
         ],
       ),
+       floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 20.0), // Add top margin
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const AddTodoPage(),
+              ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.blue,
+          elevation: 0,
+          child: const Icon(Icons.post_add, 
+          size: 60,),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
+
 
   Widget _buildButton(
       BuildContext context, String title, IconData icon, Widget destination) {
