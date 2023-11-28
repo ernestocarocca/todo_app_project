@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/todo_page.dart';
 import 'package:todo_app_project/pages/inprogress_page.dart';
 import 'package:todo_app_project/pages/done_page.dart';
@@ -12,6 +13,26 @@ class OverviewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Overview Page'),
+        centerTitle: true,
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 16.0),
+          child: IconButton(
+            icon: const Icon(Icons.post_add,
+            size: 38,
+            color: Colors.blue,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AddTodoPage(),
+                ),
+              );
+            },
+          ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
