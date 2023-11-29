@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 class TodoListWidget extends StatefulWidget {
@@ -25,6 +26,11 @@ class _TodoListWidgetState extends State<TodoListWidget> {
     } catch (e) {
       print('Error initializing manager: $e');
     }
+  }
+
+  void removeTodos(TodoItem todo) async {
+    await todoManager.removeTodos(todo);
+    _loadTodos();
   }
 
   Future<void> _loadTodos() async {
@@ -77,11 +83,32 @@ class _TodoListWidgetState extends State<TodoListWidget> {
     }
   }
 
+  Future<void> clearAllTodos() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove(
+          'todo'); // Ersätt 'todoListKey' med din specifika nyckel för sparning av todo-listan
+      setState(() {
+        _savedTodoItems.clear();
+      });
+      print('All todos cleared!');
+    } catch (e) {
+      print('Error clearing todos: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo List'),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                clearAllTodos();
+              }),
+        ],
       ),
       body: ListView.builder(
         itemCount: _savedTodoItems.length,
@@ -97,18 +124,6 @@ class _TodoListWidgetState extends State<TodoListWidget> {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                subtitle: Text(
-                  currentTodo.todoList.toString(),
-                ),
-                trailing: Checkbox(
-                  value: currentTodo.isCrossed,
-                  onChanged: (value) {
-                    setState(() {
-                      currentTodo.isCrossed = value ?? false;
-                    });
-                    // Update logic for the todo item here
-                  },
                 ),
               ),
             ),

@@ -20,7 +20,6 @@ class TodoItem {
     this.description,
   );
 
-  List? get descriptions => null;
   Map<String, dynamic> toJson() {
     return {
       'title': title,
@@ -81,7 +80,7 @@ class TodosManager {
   bool _isMatchingTodoItem(Map<String, dynamic> todoData, TodoItem todo) {
     // Compare the fields of TodoItem with the fields in the stored data
     return todoData['title'] == todo.title &&
-        listEquals(todoData['descriptions'], todo.descriptions) &&
+        todoData['descriptions'] == todo.description &&
         todoData['isCrossed'] == todo.isCrossed;
   }
 
