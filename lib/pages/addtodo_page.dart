@@ -15,7 +15,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
   TodosManager todoManager = TodosManager();
 
   List<TodoItem> _savedTodoItems = [];
-
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<TodoItem> todoList = [];
@@ -23,8 +22,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   @override
   void initState() {
     super.initState();
-   _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
-    print('loaded in init');
+    _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
   }
 
   @override
@@ -112,7 +110,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
       setState(() {
         _savedTodoItems = loadedTodos;
-        print(_savedTodoItems.length);
         debugPrint('load $_savedTodoItems');
       });
     } catch (e) {
@@ -120,31 +117,22 @@ class _AddTodoPageState extends State<AddTodoPage> {
     }
   }
 
-  void _removeTodos(TodoItem todo) async {
-    await todoManager.removeTodos(todo);
-    _loadTodos();
-  }
+
 
   Future<void> addNewItem() async {
     String newTodoItem = titleController.text.trim();
     String description = descriptionController.text.trim();
-
     if (newTodoItem.isNotEmpty) {
       List<String> todoDescriptions =
           description.isNotEmpty ? description.split(" ") : [];
-
       TodoItem newItem =
           TodoItem(newTodoItem, todoDescriptions, false, description);
-
       _savedTodoItems.add(newItem);
-
       await _saveTodos(_savedTodoItems);
-
       titleController.clear();
       descriptionController.clear();
     }
     for (dynamic p in _savedTodoItems) {
-      print(p);
       debugPrint(p.toString());
     }
   }
@@ -177,7 +165,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
   }
 
   Future<void> _saveTodos(List<TodoItem> todoItems) async {
-    // Save the list of todo items using your TodosManager or preferred method
     await todoManager.addTodoList(todoItems);
   }
 

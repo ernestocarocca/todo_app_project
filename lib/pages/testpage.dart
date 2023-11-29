@@ -28,11 +28,6 @@ class _TodoListWidgetState extends State<TodoListWidget> {
     }
   }
 
-  void removeTodos(TodoItem todo) async {
-    await todoManager.removeTodos(todo);
-    _loadTodos();
-  }
-
   Future<void> _loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();

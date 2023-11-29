@@ -22,33 +22,17 @@ class ToDoPageState extends State<ToDoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // var toDoModel = Provider.of<ToDoModel>(context);
-
-    // Sample data for testings
-    /*
-    var sampleData = [
-      ToDoItemModel(
-          title: 'Handla',
-          description: 'mjölk',
-          imageUrl: ('images/testimage.jpg')),
-      ToDoItemModel(
-          title: 'träna',
-          description: 'knäböj',
-          imageUrl:
-              'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
-      ToDoItemModel(
-          title: 'städa',
-          description: 'sopa',
-          imageUrl:
-              'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
-    ];
-*/
-    // Add sample data to the ToDoModel
-    // toDoModel.addTodoItems(sampleData);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo Page'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              removeTodos(_savedTodoItems);
+            },
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -75,11 +59,8 @@ class ToDoPageState extends State<ToDoPage> {
                 );
               },
               child: Card(
-                // Anpassa din Card-widget
                 child: ListTile(
                   title: Text(todoOnThisIdex.title),
-
-                  // Här kan du lägga till annat innehåll för ListTile
                 ),
               ),
             );
@@ -100,5 +81,10 @@ class ToDoPageState extends State<ToDoPage> {
     } catch (e) {
       print('Error loading todos: $e');
     }
+  }
+
+  void removeTodos(List<TodoItem> todo) async {
+    await todoManager.removeTodos(todo);
+    loadTodos();
   }
 }

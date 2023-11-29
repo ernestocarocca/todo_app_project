@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -10,7 +9,10 @@ class TodoItem {
   String title;
   String description;
 
-  TodoItem({required this.isCrossed, required this.title, required this.description});
+  TodoItem(
+      {required this.isCrossed,
+      required this.title,
+      required this.description});
 }
 
 class MyApp extends StatelessWidget {
@@ -34,12 +36,10 @@ class _EditTodoPageState extends State<EditTodoPage> {
     TodoItem(isCrossed: false, title: 'Task 3', description: 'Description 3'),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text('Edit Todo Page'),
       ),
       body: Padding(
@@ -56,7 +56,9 @@ class _EditTodoPageState extends State<EditTodoPage> {
                   child: Text(
                     todoList[index].title,
                     style: TextStyle(
-                      decoration: todoList[index].isCrossed ? TextDecoration.lineThrough : null,
+                      decoration: todoList[index].isCrossed
+                          ? TextDecoration.lineThrough
+                          : null,
                     ),
                   ),
                 ),
@@ -67,7 +69,9 @@ class _EditTodoPageState extends State<EditTodoPage> {
                   child: Text(
                     todoList[index].description,
                     style: TextStyle(
-                      decoration: todoList[index].isCrossed ? TextDecoration.lineThrough : null,
+                      decoration: todoList[index].isCrossed
+                          ? TextDecoration.lineThrough
+                          : null,
                     ),
                   ),
                 ),
@@ -106,8 +110,10 @@ class _EditTodoPageState extends State<EditTodoPage> {
   }
 
   void _editTodo(int index, {required bool isTitle}) async {
-    String currentValue = isTitle ? todoList[index].title : todoList[index].description;
-    TextEditingController textController = TextEditingController(text: currentValue);
+    String currentValue =
+        isTitle ? todoList[index].title : todoList[index].description;
+    TextEditingController textController =
+        TextEditingController(text: currentValue);
 // Ernesto catch if String value is not empty (null)
     String newValue = await showDialog(
       context: context,
@@ -184,4 +190,3 @@ class _EditTodoPageState extends State<EditTodoPage> {
     }
   }
 }
-
