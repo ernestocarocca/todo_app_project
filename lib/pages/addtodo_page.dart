@@ -40,6 +40,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
             onPressed: () {
               // Rensa listan när delete-ikonen trycks
               addDescription();
+              _loadTodos();
             },
           ),
         ],
@@ -133,35 +134,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
       ),
     );
   }
-/*
-  Future<void> _addItemToList() async {
-    String newItem = titleController.text.trim();
-    if (newItem.isNotEmpty) {
-      setState(() {
-        _savedTodoItems.last.todoList.add(newItem);
-      });
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<String> encodedItems =
-          _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
-      prefs.setStringList('todoListKey', encodedItems);
-
-      descriptionController.clear();
-    }
-  }
-*/
-  // Ernesto sets todoList items to the saved todoItems in shareprefs
-
-  /*
-  void _loadTodos() async {
-    List<TodoItem> loadedTodos = await todoManager.getTodos();
-
-    setState(() {
-  _savedTodoItems = loadedTodos;
-
-    });
-  }
-*/
   void _loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
@@ -186,7 +159,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     if (newTodoItem.isNotEmpty) {
       List<String> todoDescriptions =
-          description.isNotEmpty ? description.split(",") : [];
+          description.isNotEmpty ? description.split(" ") : [];
 
       TodoItem newItem =
           TodoItem(newTodoItem, todoDescriptions, false, description);
