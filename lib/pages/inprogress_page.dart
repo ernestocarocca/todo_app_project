@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app_project/pages/edittodo_page.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
-class InProgressPage extends StatelessWidget {
+class InProgressPage extends StatefulWidget {
   const InProgressPage({Key? key}) : super(key: key);
+
+  @override
+  _InProgressPageState createState() => _InProgressPageState();
+}
+
+class _InProgressPageState extends State<InProgressPage> {
+  TodosManager todoManager = TodosManager();
+  List<TodoItem> _savedTodoItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTodos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,42 +44,56 @@ class InProgressPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.orange, Color.fromARGB(255, 103, 62, 9)], // Customize your gradient colors
+            colors: [
+              Colors.orange,
+              Color.fromARGB(255, 103, 62, 9)
+            ], // Customize your gradient colors
           ),
         ),
         child: ListView.builder(
-          itemCount: inProgressModel.inProgressList.length,
+          itemCount: _savedTodoItems.length,
           itemBuilder: (context, index) {
-            var inProgressItem = inProgressModel.inProgressList[index];
+            var inProgressTodo = _savedTodoItems[index];
             return Card(
               color: Colors.white70, // Customize your card color
               elevation: 5.0,
               margin: const EdgeInsets.symmetric(vertical: 8.0),
               child: ListTile(
                 title: Text(
-                  inProgressItem.title,
+                  inProgressTodo.title,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
                   ),
                 ),
                 subtitle: Text(
-                  inProgressItem.description,
+                  inProgressTodo.description,
                   style: const TextStyle(fontSize: 14.0),
                 ),
-                 onTap: () {
+                /*   onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => EditTodoPage(),
                     ),
                   );
-                },
+                },*/
               ),
             );
           },
         ),
       ),
     );
+  }
+
+  Future<void> _loadTodos() async {
+    try {
+      List<TodoItem> loadedTodos = await todoManager.getTodos();
+      setState(() {
+        _savedTodoItems = loadedTodos;
+      });
+    } catch (e) {
+      print('Error loading todos: $e');
+    }
   }
 }

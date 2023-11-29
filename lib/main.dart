@@ -32,12 +32,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: TodoListWidget(),
-      
-    /*  
-      MyHomePage(
+      home: MyHomePage(
         title: 'main',
-      ),*/
+      ),
     );
   }
 }

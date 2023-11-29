@@ -8,22 +8,20 @@ class ToDoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     var toDoModel = Provider.of<ToDoModel>(context);
 
     // Sample data for testings
     var sampleData = [
-      ToDoItem(
+      ToDoItemModel(
           title: 'Handla',
           description: 'mjölk',
           imageUrl: ('images/testimage.jpg')),
-        
-      ToDoItem(
+      ToDoItemModel(
           title: 'träna',
           description: 'knäböj',
           imageUrl:
               'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
-      ToDoItem(
+      ToDoItemModel(
           title: 'städa',
           description: 'sopa',
           imageUrl:
@@ -70,7 +68,7 @@ class ToDoPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) =>  EditTodoPage(),
+                      builder: (BuildContext context) => EditTodoPage(),
                     ),
                   );
                 },
@@ -86,6 +84,5 @@ class ToDoPage extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
