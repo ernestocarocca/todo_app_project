@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
+import 'package:todo_app_project/pages/testpage.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
 import 'package:todo_app_project/pages/edittodo_page.dart';
@@ -31,9 +32,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: MyHomePage(
+      home: TodoListWidget(),
+      
+    /*  
+      MyHomePage(
         title: 'main',
-      ),
+      ),*/
     );
   }
 }

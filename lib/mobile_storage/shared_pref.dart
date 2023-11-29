@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoItem {
@@ -86,8 +86,14 @@ class TodosManager {
   }
 
   Future<List<TodoItem>> getTodos() async {
+    if (!_prefs.containsKey(_keyTodo)) {
+      return []; // Returnera tom lista om det inte finns några sparade uppgifter
+    }
     final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
     List<TodoItem> todoItems = [];
+    if (todos == null || todos.isEmpty) {
+      return []; // Returnera tom lista om sparade uppgifter är null eller tomma
+    }
 
     for (String todoJson in todos) {
       try {
@@ -309,124 +315,3 @@ class ButtonWidget extends StatelessWidget {
 
 */
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'SharedPreferences Demo',
-      home: SavedDataScreen(),
-    );
-  }
-}
-
-class SavedDataScreen extends StatefulWidget {
-  @override
-  _SavedDataScreenState createState() => _SavedDataScreenState();
-}
-
-class _SavedDataScreenState extends State<SavedDataScreen> {
-  List<TodoItem> _savedTodoItems = [];
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  TextEditingController _todoListController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSavedData();
-  }
-
-  Future<void> _loadSavedData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> savedData = prefs.getStringList('todoListKey') ?? [];
-
-    setState(() {
-      _savedTodoItems =
-          savedData.map((item) => TodoItem.fromMap(json.decode(item))).toList();
-    });
-  }
-
-  Future<void> _addNewItem() async {
-    String title = _titleController.text.trim();
-    String description = _descriptionController.text.trim();
-    String todoListText = _todoListController.text.trim();
-
-    List<String> todoList =
-        todoListText.isNotEmpty ? todoListText.split(",") : [];
-
-    TodoItem newItem = TodoItem(title, todoList, false, description);
-
-    setState(() {
-      _savedTodoItems.add(newItem);
-    });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> encodedItems =
-        _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
-    prefs.setStringList('todoListKey', encodedItems);
-
-    // Clear text fields after adding the new item
-    _titleController.clear();
-    _descriptionController.clear();
-    _todoListController.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved Data'),
-      ),
-      body: ListView.builder(
-        itemCount: _savedTodoItems.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(_savedTodoItems[index].title),
-            subtitle: Text(_savedTodoItems[index].description),
-            trailing: Text(_savedTodoItems[index].todoList.join(", ")),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Add New Item'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: _titleController,
-                      decoration: InputDecoration(labelText: 'Title'),
-                    ),
-                    TextField(
-                      controller: _descriptionController,
-                      decoration: InputDecoration(labelText: 'Description'),
-                    ),
-                    TextField(
-                      controller: _todoListController,
-                      decoration: InputDecoration(
-                          labelText: 'Todo List (Separate by comma)'),
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _addNewItem();
-                    },
-                    child: Text('Save'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-}

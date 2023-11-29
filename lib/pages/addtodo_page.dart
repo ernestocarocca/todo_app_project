@@ -23,7 +23,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   @override
   void initState() {
     super.initState();
-    _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
+   _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
     print('loaded in init');
   }
 
