@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 //Ernesto: moved TodoItem class to Shae_pref file
@@ -80,48 +78,22 @@ class _AddTodoPageState extends State<AddTodoPage> {
               child: ListView.builder(
                 itemCount: _savedTodoItems.length,
                 itemBuilder: (context, index) {
-                  final currentTodo = _savedTodoItems[index];
-                  return Dismissible(
-                    key: Key(currentTodo.title),
-                    onDismissed: (direction) {
-                      setState(() {
-                        _savedTodoItems.removeAt(index);
-                        _removeTodos(currentTodo);
-                        print(_savedTodoItems.length);
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("$currentTodo Deleted")));
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      child: const Center(
-                          child: Text(
-                        "Deleted",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      )),
-                    ),
-                    child: Card(
-                      child: ListTile(
-                        title: Text(_savedTodoItems[index].title),
-                        subtitle:
-                            Text(_savedTodoItems[index].todoList.toString()),
-                        trailing: GestureDetector(
-                          onTap: () {
-                            _toggleTodo(index);
-                          },
-                          child: Icon(
-                            _savedTodoItems[index].isCrossed
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: _savedTodoItems[index].isCrossed
-                                ? Colors.green
-                                : null,
-                          ),
+                  return Card(
+                    child: ListTile(
+                      title: Text(_savedTodoItems[index].title),
+                      subtitle:
+                          Text(_savedTodoItems[index].todoList.toString()),
+                      trailing: GestureDetector(
+                        onTap: () {
+                          _toggleTodo(index);
+                        },
+                        child: Icon(
+                          _savedTodoItems[index].isCrossed
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
+                          color: _savedTodoItems[index].isCrossed
+                              ? Colors.green
+                              : null,
                         ),
                       ),
                     ),
@@ -215,58 +187,3 @@ class _AddTodoPageState extends State<AddTodoPage> {
     });
   }
 }
-  /*
-
-  Future<void> _addNewItem() async {
-    String newTodoItem = titleController.text.trim();
-    String description =  descriptionController.text.trim();
-if(newTodoItem.isNotEmpty){
-  setState(() {
-    _savedTodoItems.last.todoList.add(newTodoItem);
-  });
-
-   
-
-
-       
-
-   
- 
-
-    List<String> todoList = description.isNotEmpty ? description.split(",") : [];
-
-    TodoItem newItem = TodoItem(newTodoItem, todoList, false, description);
-    setState(() {
-      _savedTodoItems.add(newItem);
-    });
-List<String> enocode = 
-  _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
-
-  todoManager.addTodoList(enocode.cast<TodoItem>());
-
-    // Clear text fields after adding the new item
-    titleController.clear();
-    descriptionController.clear();
-  }
-*//*
-  void _addTodo() async {
-    String title = titleController.text.trim();
-    String description = descriptionController.text.trim();
-
-    if (title.isNotEmpty && description.isNotEmpty) {
-      setState(() {
-        List<String> todoList = [];
-        bool isCrossed = false;
-        List<TodoItem> todo = [
-          TodoItem(title, todoList, isCrossed, description)
-        ];
-        todoManager.addTodoList(todo);
-
-        titleController.clear();
-        descriptionController.clear();
-        _loadTodos();
-      });
-    }
-  }
-*/
-
