@@ -108,17 +108,20 @@ class _AddTodoPageState extends State<AddTodoPage> {
   void _loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
+      debugPrint(loadedTodos.toString());
       setState(() {
         _savedTodoItems = loadedTodos;
-        debugPrint('load $_savedTodoItems');
       });
     } catch (e) {
       print('Error loading todos: $e');
     }
   }
 
-
-
+  void removeTodos(List<TodoItem> todo) async {
+    await todoManager.removeTodos(todo);
+    _loadTodos();
+  }
+/*
   Future<void> addNewItem() async {
     String newTodoItem = titleController.text.trim();
     String description = descriptionController.text.trim();
@@ -135,6 +138,25 @@ class _AddTodoPageState extends State<AddTodoPage> {
     for (dynamic p in _savedTodoItems) {
       debugPrint(p.toString());
     }
+  }*/
+
+  Future<void> addNewItem() async {
+    String newTodoItem = titleController.text.trim();
+    String description = descriptionController.text.trim();
+
+    if (newTodoItem.isNotEmpty) {
+      //List<String> todoDescriptions =
+      //   description.isNotEmpty ? description.split(" ") : [];
+      // TodoItem newItem = TodoItem('', [], false, description);
+      //   _savedTodoItems.add(newItem);
+      await _saveTodos(_savedTodoItems);
+      titleController.clear();
+      descriptionController.clear();
+    }
+
+    for (dynamic p in _savedTodoItems) {
+      debugPrint(p.toString());
+    }
   }
 
   void addDescription() {
@@ -142,14 +164,30 @@ class _AddTodoPageState extends State<AddTodoPage> {
     if (newDescription.isNotEmpty) {
       setState(() {
         newTodoDescriptions.add(newDescription);
+        _savedTodoItems.forEach((e) {
+          newTodoDescriptions.addAll(e.todoList);
+        });
         descriptionController.clear();
       });
     }
   }
 
+  /*
+
+  void addDescription() {
+    String newDescription = descriptionController.text.trim();
+    if (newDescription.isNotEmpty) {
+      setState(() {
+        newTodoDescriptions.add(newDescription);
+        _savedTodoItems.map((e) => {newTodoDescriptions = e.todoList});
+        descriptionController.clear();
+      });
+    }
+  }  */
+
   void saveTodoItem() async {
     String newTodoItem = titleController.text.trim();
-    if (newTodoItem.isNotEmpty && newTodoDescriptions.isNotEmpty) {
+    if (newTodoDescriptions.isNotEmpty) {
       TodoItem newItem = TodoItem(newTodoItem, newTodoDescriptions, false,
           ''); // Använd newTodoDescriptions
       _savedTodoItems.add(newItem);
