@@ -3,24 +3,25 @@
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-
 
 class TodoItem {
   final String title;
   List<String> todoList; // Listan av uppgifter
   bool isCrossed;
   final String description;
+
   TodoItem(
     this.title,
     this.todoList,
     this.isCrossed,
     this.description,
   );
-  Map<String, Object> toJson() {
+
+  List? get descriptions => null;
+  Map<String, dynamic> toJson() {
     return {
       'title': title,
       'todoList': todoList,
@@ -31,11 +32,11 @@ class TodoItem {
 
   factory TodoItem.fromMap(Map<String, dynamic> map) {
     return TodoItem(
-      map['title'],
-      List<String>.from(map[
-          'todoList']), // Konvertera listan från dynamisk till en lista av strängar
-      map['isCrossed'],
-      map['description'],
+      map['title'] as String, // Ange att 'title' är av typen String
+      List<String>.from(map['todoList'] ??
+          []), // Konvertera listan från dynamisk till en lista av strängar
+      map['isCrossed'] as bool, // Ange att 'isCrossed' är av typen bool
+      map['description'] as String, // Ange att 'description' är av typen String
     );
   }
 }
@@ -48,19 +49,19 @@ class TodosManager {
     _prefs = await SharedPreferences.getInstance();
     print('SharedPreferences initialiserades');
   }
-Future<void> addTodoList(List<TodoItem> todoList) async {
-  final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
 
-  for (TodoItem todo in todoList) {
-    todos.add(json.encode(todo.toJson()));
+  Future<void> addTodoList(List<TodoItem> todoList) async {
+    final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+
+    for (TodoItem todo in todoList) {
+      todos.add(json.encode(todo.toJson()));
+      debugPrint(todos.last.toString());
+    }
+
+    await _prefs.setStringList(_keyTodo, todos);
   }
 
-  await _prefs.setStringList(_keyTodo, todos);
-}
-
-
-
- /*
+  /*
     final List<String> todos =
         todoList.map((todo) => json.encode(todo.toJson())).toList();
     await _prefs.setStringList(_keyTodo, todos);
@@ -71,38 +72,43 @@ Future<void> addTodoList(List<TodoItem> todoList) async {
 
     todos.removeWhere((taskJson) {
       final todoData = json.decode(taskJson);
-      return todoData['title'] == todo.title &&
-          todoData['isCrossed'] == todo.isCrossed &&
-          todoData['description'] == todo.description;
+      return _isMatchingTodoItem(todoData, todo);
     });
 
     await _prefs.setStringList(_keyTodo, todos);
   }
-Future<List<TodoItem>> getTodos() async {
-  final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
-  List<TodoItem> todoItems = [];
 
-  for (String todoJson in todos) {
-    try {
-      final Map<String, dynamic> todoData = json.decode(todoJson);
-
-      // Kolla om strukturen är för det nya TodoItem-formatet med en lista av uppgifter
-      if (todoData.containsKey('title') &&
-          todoData.containsKey('todoList') &&
-          todoData.containsKey('isCrossed') &&
-          todoData.containsKey('description')) {
-        final TodoItem todoItem = TodoItem.fromMap(todoData);
-        todoItems.add(todoItem);
-      }
-    } catch (e) {
-      print('Fel vid avkodning av TodoItem: $e');
-    }
+  bool _isMatchingTodoItem(Map<String, dynamic> todoData, TodoItem todo) {
+    // Compare the fields of TodoItem with the fields in the stored data
+    return todoData['title'] == todo.title &&
+        listEquals(todoData['descriptions'], todo.descriptions) &&
+        todoData['isCrossed'] == todo.isCrossed;
   }
 
-  return todoItems;
-}
-}
+  Future<List<TodoItem>> getTodos() async {
+    final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+    List<TodoItem> todoItems = [];
 
+    for (String todoJson in todos) {
+      try {
+        final Map<String, dynamic> todoData = json.decode(todoJson);
+
+        // Kolla om strukturen är för det nya TodoItem-formatet med en lista av uppgifter
+        if (todoData.containsKey('title') &&
+            todoData.containsKey('todoList') &&
+            todoData.containsKey('isCrossed') &&
+            todoData.containsKey('description')) {
+          final TodoItem todoItem = TodoItem.fromMap(todoData);
+          todoItems.add(todoItem);
+        }
+      } catch (e) {
+        print('Fel vid avkodning av TodoItem: $e');
+      }
+    }
+
+    return todoItems;
+  }
+}
 
 /*
 class SharedPreferencesManager {
@@ -128,17 +134,12 @@ class SharedPreferencesManager {
 */
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-
-
-
-
-  /*
+/*
   @override
   void initState() {
     super.initState();
     _loadTasks();
   }*/
-
 
 /*
   void _loadTasks() async {
@@ -164,9 +165,7 @@ class SharedPreferencesManager {
     );
   }*/
 
-
-
- /*
+/*
 
   @override
   Widget build(BuildContext context)  => addTodoWidget{
@@ -191,7 +190,7 @@ class SharedPreferencesManager {
       ),
     );
   } */
-  /*
+/*
 
   Widget addTodoWidget() {
 
@@ -342,9 +341,8 @@ class _SavedDataScreenState extends State<SavedDataScreen> {
     List<String> savedData = prefs.getStringList('todoListKey') ?? [];
 
     setState(() {
-      _savedTodoItems = savedData
-          .map((item) => TodoItem.fromMap(json.decode(item)))
-          .toList();
+      _savedTodoItems =
+          savedData.map((item) => TodoItem.fromMap(json.decode(item))).toList();
     });
   }
 
@@ -353,7 +351,8 @@ class _SavedDataScreenState extends State<SavedDataScreen> {
     String description = _descriptionController.text.trim();
     String todoListText = _todoListController.text.trim();
 
-    List<String> todoList = todoListText.isNotEmpty ? todoListText.split(",") : [];
+    List<String> todoList =
+        todoListText.isNotEmpty ? todoListText.split(",") : [];
 
     TodoItem newItem = TodoItem(title, todoList, false, description);
 
@@ -362,7 +361,8 @@ class _SavedDataScreenState extends State<SavedDataScreen> {
     });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> encodedItems = _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
+    List<String> encodedItems =
+        _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
     prefs.setStringList('todoListKey', encodedItems);
 
     // Clear text fields after adding the new item
@@ -375,7 +375,7 @@ class _SavedDataScreenState extends State<SavedDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved Data'),
+        title: const Text('Saved Data'),
       ),
       body: ListView.builder(
         itemCount: _savedTodoItems.length,
@@ -407,7 +407,8 @@ class _SavedDataScreenState extends State<SavedDataScreen> {
                     ),
                     TextField(
                       controller: _todoListController,
-                      decoration: InputDecoration(labelText: 'Todo List (Separate by comma)'),
+                      decoration: InputDecoration(
+                          labelText: 'Todo List (Separate by comma)'),
                     ),
                   ],
                 ),

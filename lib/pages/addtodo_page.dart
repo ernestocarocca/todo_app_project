@@ -14,20 +14,19 @@ class AddTodoPage extends StatefulWidget {
 }
 
 class _AddTodoPageState extends State<AddTodoPage> {
-  final TodosManager todoManager = TodosManager();
-   List<TodoItem> _savedTodoItems = [];
+  TodosManager todoManager = TodosManager();
+
+  List<TodoItem> _savedTodoItems = [];
 
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<TodoItem> todoList = [];
-  List<TodoItem> _todoItems = [];
-
+  List<String> newTodoDescriptions = [];
   @override
   void initState() {
     super.initState();
     _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
     print('loaded in init');
-
   }
 
   @override
@@ -40,7 +39,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
             icon: Icon(Icons.delete),
             onPressed: () {
               // Rensa listan när delete-ikonen trycks
-              todoList.clear();
+              addDescription();
             },
           ),
         ],
@@ -68,25 +67,26 @@ class _AddTodoPageState extends State<AddTodoPage> {
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                _addTodo();
-
-                print(todoList.length);
-                print(todoList.indexed);
+                addNewItem();
+                saveTodoItem();
+                _loadTodos();
+                //_saveTodos(_savedTodoItems);
               },
               child: const Text('Add Todo'),
             ),
             const SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
-                itemCount: _todoItems.length,
+                itemCount: _savedTodoItems.length,
                 itemBuilder: (context, index) {
-                  final currentTodo = todoList[index];
+                  final currentTodo = _savedTodoItems[index];
                   return Dismissible(
                     key: Key(currentTodo.title),
                     onDismissed: (direction) {
                       setState(() {
-                        todoList.removeAt(index);
+                        _savedTodoItems.removeAt(index);
                         _removeTodos(currentTodo);
+                        print(_savedTodoItems.length);
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("$currentTodo Deleted")));
@@ -107,17 +107,19 @@ class _AddTodoPageState extends State<AddTodoPage> {
                     child: Card(
                       child: ListTile(
                         title: Text(_savedTodoItems[index].title),
-                        subtitle: Text(_savedTodoItems[index].description),
+                        subtitle:
+                            Text(_savedTodoItems[index].todoList.toString()),
                         trailing: GestureDetector(
                           onTap: () {
                             _toggleTodo(index);
                           },
                           child: Icon(
-                            todoList[index].isCrossed
+                            _savedTodoItems[index].isCrossed
                                 ? Icons.check_box
                                 : Icons.check_box_outline_blank,
-                            color:
-                                todoList[index].isCrossed ? Colors.green : null,
+                            color: _savedTodoItems[index].isCrossed
+                                ? Colors.green
+                                : null,
                           ),
                         ),
                       ),
@@ -131,8 +133,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
       ),
     );
   }
-
-Future<void> _addItemToList() async {
+/*
+  Future<void> _addItemToList() async {
     String newItem = titleController.text.trim();
     if (newItem.isNotEmpty) {
       setState(() {
@@ -140,43 +142,37 @@ Future<void> _addItemToList() async {
       });
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<String> encodedItems = _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
+      List<String> encodedItems =
+          _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
       prefs.setStringList('todoListKey', encodedItems);
 
       descriptionController.clear();
     }
   }
- Future<void> _addNewItem() async {
-    String title = titleController.text.trim();
-    String description = descriptionController.text.trim();
- 
-
-    List<String> todoList = description.isNotEmpty ? description.split(",") : [];
-
-    TodoItem newItem = TodoItem(title, todoList, false, description);
-
-    setState(() {
-      _savedTodoItems.add(newItem);
-    });
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> encodedItems = _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
-    prefs.setStringList('todoListKey', encodedItems);
-
-    // Clear text fields after adding the new item
-    titleController.clear();
-    descriptionController.clear();
-   
-  }
+*/
   // Ernesto sets todoList items to the saved todoItems in shareprefs
+
+  /*
   void _loadTodos() async {
-    List<TodoItem> todos = await TodosManager().getTodos();
-    final loadedTodos = await todoManager.getTodos();
+    List<TodoItem> loadedTodos = await todoManager.getTodos();
 
     setState(() {
-      _todoItems = todos;
-      todoList = loadedTodos;
+  _savedTodoItems = loadedTodos;
+
     });
+  }
+*/
+  void _loadTodos() async {
+    try {
+      List<TodoItem> loadedTodos = await todoManager.getTodos();
+      setState(() {
+        _savedTodoItems = loadedTodos;
+        print(_savedTodoItems.length);
+        debugPrint('load $_savedTodoItems');
+      });
+    } catch (e) {
+      print('Error loading todos: $e');
+    }
   }
 
   void _removeTodos(TodoItem todo) async {
@@ -184,6 +180,102 @@ Future<void> _addItemToList() async {
     _loadTodos();
   }
 
+  Future<void> addNewItem() async {
+    String newTodoItem = titleController.text.trim();
+    String description = descriptionController.text.trim();
+
+    if (newTodoItem.isNotEmpty) {
+      List<String> todoDescriptions =
+          description.isNotEmpty ? description.split(",") : [];
+
+      TodoItem newItem =
+          TodoItem(newTodoItem, todoDescriptions, false, description);
+
+      _savedTodoItems.add(newItem);
+
+      await _saveTodos(_savedTodoItems);
+
+      titleController.clear();
+      descriptionController.clear();
+    }
+    for (dynamic p in _savedTodoItems) {
+      print(p);
+      debugPrint(p.toString());
+    }
+  }
+
+  void addDescription() {
+    String newDescription = descriptionController.text.trim();
+    if (newDescription.isNotEmpty) {
+      setState(() {
+        newTodoDescriptions.add(newDescription);
+        descriptionController.clear();
+      });
+    }
+  }
+
+  void saveTodoItem() async {
+    String newTodoItem = titleController.text.trim();
+    if (newTodoItem.isNotEmpty && newTodoDescriptions.isNotEmpty) {
+      TodoItem newItem = TodoItem(newTodoItem, newTodoDescriptions, false,
+          ''); // Använd newTodoDescriptions
+      _savedTodoItems.add(newItem);
+
+      // Spara den uppdaterade listan av todo-items
+      await _saveTodos(_savedTodoItems);
+
+      // Rensa input-fält och beskrivningslistan
+      setState(() {
+        newTodoDescriptions.clear();
+      });
+    }
+  }
+
+  Future<void> _saveTodos(List<TodoItem> todoItems) async {
+    // Save the list of todo items using your TodosManager or preferred method
+    await todoManager.addTodoList(todoItems);
+  }
+
+  void _toggleTodo(int index) {
+    setState(() {
+      _savedTodoItems[index].isCrossed = !_savedTodoItems[index].isCrossed;
+    });
+  }
+}
+  /*
+
+  Future<void> _addNewItem() async {
+    String newTodoItem = titleController.text.trim();
+    String description =  descriptionController.text.trim();
+if(newTodoItem.isNotEmpty){
+  setState(() {
+    _savedTodoItems.last.todoList.add(newTodoItem);
+  });
+
+   
+
+
+       
+
+   
+ 
+
+    List<String> todoList = description.isNotEmpty ? description.split(",") : [];
+
+    TodoItem newItem = TodoItem(newTodoItem, todoList, false, description);
+    setState(() {
+      _savedTodoItems.add(newItem);
+    });
+List<String> enocode = 
+  _savedTodoItems.map((item) => json.encode(item.toJson())).toList();
+
+  todoManager.addTodoList(enocode.cast<TodoItem>());
+
+    // Clear text fields after adding the new item
+    titleController.clear();
+    descriptionController.clear();
+  }
+*//*
   void _addTodo() async {
     String title = titleController.text.trim();
     String description = descriptionController.text.trim();
@@ -203,10 +295,5 @@ Future<void> _addItemToList() async {
       });
     }
   }
+*/
 
-  void _toggleTodo(int index) {
-    setState(() {
-      todoList[index].isCrossed = !todoList[index].isCrossed;
-    });
-  }
-}
