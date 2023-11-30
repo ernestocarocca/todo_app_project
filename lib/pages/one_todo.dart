@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 class ToDoDetailsPage extends StatefulWidget {
@@ -9,11 +7,22 @@ class ToDoDetailsPage extends StatefulWidget {
     Key? key,
     required this.todoItem,
   }) : super(key: key);
+
   @override
   _ToDoDetailsPageState createState() => _ToDoDetailsPageState();
 }
 
 class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
+  List<bool> taskCompletionStatus = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the list with the completion status of each task
+    taskCompletionStatus =
+        List.generate(widget.todoItem.todoList.length, (index) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,15 +51,14 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   trailing: Checkbox(
-                    value: widget.todoItem.isCrossed,
+                    value: taskCompletionStatus[index],
                     onChanged: (value) {
                       setState(() {
-                        for (String pressed in widget.todoItem.todoList) {
-                          if (pressed[index] == pressed[index]) {
-                            widget.todoItem.isCrossed =
-                                !widget.todoItem.isCrossed;
-                          }
-                        }
+                        // Toggle the completion status of the task
+                        taskCompletionStatus[index] = value!;
+                        // Handle your logic for overall task completion here
+                        widget.todoItem.isCrossed =
+                            taskCompletionStatus.contains(true);
                       });
                     },
                     activeColor: Colors.green,
