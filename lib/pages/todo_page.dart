@@ -78,14 +78,15 @@ class ToDoPage extends StatelessWidget {
               child: ListTile(
                 title: Text(
                   todoItem.title,
-                  style: const TextStyle(
+                  style: const TextStyle(color: Colors.black ,
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
+
                   ),
                 ),
                 subtitle: Text(
                   todoItem.description,
-                  style: const TextStyle(fontSize: 14.0),
+                  style: const TextStyle(color: Colors.black ,fontSize: 14.0),
                 ),
                 onTap: () {
                   Navigator.push(
