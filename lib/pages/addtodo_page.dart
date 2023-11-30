@@ -25,6 +25,12 @@ class _AddTodoPageState extends State<AddTodoPage> {
     _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
   }
 
+  void _onButtonPressed() {
+    addDescription();
+    _loadTodos();
+    print('Button pressed!');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,8 +41,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
             icon: Icon(Icons.delete),
             onPressed: () {
               // Rensa listan när delete-ikonen trycks
-              addDescription();
-              _loadTodos();
+              removeTodos(_savedTodoItems);
             },
           ),
         ],
@@ -53,24 +58,19 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 hintText: 'Enter title',
               ),
             ),
-            const SizedBox(height: 16.0),
+            //  const SizedBox(height: 16.0),
             const Text('Description:'),
+
             TextField(
               controller: descriptionController,
-              decoration: const InputDecoration(
-                hintText: 'Enter description',
-              ),
+              decoration: InputDecoration(
+                  hintText: 'Enter description',
+                  suffixIcon: IconButton(
+                    onPressed: _onButtonPressed,
+                    icon: const Icon(Icons.add),
+                  )),
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                addNewItem();
-                saveTodoItem();
-                _loadTodos();
-                //_saveTodos(_savedTodoItems);
-              },
-              child: const Text('Add Todo'),
-            ),
+
             const SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
@@ -97,6 +97,20 @@ class _AddTodoPageState extends State<AddTodoPage> {
                     ),
                   );
                 },
+              ),
+            ),
+           
+            Padding(
+            
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  addNewItem();
+                  saveTodoItem();
+                  _loadTodos();
+                  //_saveTodos(_savedTodoItems);
+                },
+                child: const Text('Add Todo'),
               ),
             ),
           ],
