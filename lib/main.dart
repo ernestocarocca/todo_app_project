@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
+import 'package:todo_app_project/pages/testpage.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
 import 'package:todo_app_project/pages/edittodo_page.dart';
+
 //hej
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(
-    MultiProvider(
+    /* MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ToDoModel()),
         ChangeNotifierProvider(create: (context) => InProgressModel()),
         ChangeNotifierProvider(create: (context) => DoneModel()),
-      ],
+      ], 
       child: const MyApp(),
-    ),
+    ),*/
+    const MyApp(),
   );
 }
 
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const MyHomePage(
+      home: MyHomePage(
         title: 'main',
       ),
     );
@@ -49,6 +51,19 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int currentPage = 0;
+  @override
+  void initState() {
+    super.initState();
+    initShareprefs();
+  }
+
+  Future<void> initShareprefs() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await TodosManager.init();
+    setState(() {
+      print('inintprefs run in start');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
