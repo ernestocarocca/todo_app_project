@@ -36,6 +36,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   final CameraService _cameraService = CameraService();
 
+//takes a photo and saves it to the device
   Future<void> _captureAndSaveImage() async {
     File? imageFile = await _cameraService.takePhoto();
     if (imageFile != null) {
