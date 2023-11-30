@@ -142,13 +142,13 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   Future<void> addNewItem() async {
     String newTodoItem = titleController.text.trim();
-    String description = descriptionController.text.trim();
+    //String description = descriptionController.text.trim();
 
     if (newTodoItem.isNotEmpty) {
       //List<String> todoDescriptions =
       //   description.isNotEmpty ? description.split(" ") : [];
       // TodoItem newItem = TodoItem('', [], false, description);
-      //   _savedTodoItems.add(newItem);
+      //  _savedTodoItems.add(newItem);
       await _saveTodos(_savedTodoItems);
       titleController.clear();
       descriptionController.clear();
@@ -158,7 +158,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
       debugPrint(p.toString());
     }
   }
-
+/*
   void addDescription() {
     String newDescription = descriptionController.text.trim();
     if (newDescription.isNotEmpty) {
@@ -170,9 +170,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
         descriptionController.clear();
       });
     }
-  }
-
-  /*
+  } */
 
   void addDescription() {
     String newDescription = descriptionController.text.trim();
@@ -183,7 +181,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
         descriptionController.clear();
       });
     }
-  }  */
+  }
 
   void saveTodoItem() async {
     String newTodoItem = titleController.text.trim();

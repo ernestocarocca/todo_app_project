@@ -11,14 +11,15 @@ import 'package:todo_app_project/pages/edittodo_page.dart';
 //hej
 Future<void> main() async {
   runApp(
-    MultiProvider(
+    /* MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ToDoModel()),
         ChangeNotifierProvider(create: (context) => InProgressModel()),
         ChangeNotifierProvider(create: (context) => DoneModel()),
-      ],
+      ], 
       child: const MyApp(),
-    ),
+    ),*/
+    const MyApp(),
   );
 }
 
