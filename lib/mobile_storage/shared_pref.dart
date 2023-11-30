@@ -8,10 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoItem {
-  final String title;
+   String title;
   List<String> todoList; // Listan av uppgifter
   bool isCrossed;
-  final String description;
+ String description;
 
   TodoItem(
     this.title,

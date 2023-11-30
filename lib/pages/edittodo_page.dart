@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
+/*
 void main() {
   runApp(MyApp());
 }
@@ -13,9 +14,11 @@ class TodoItem {
       {required this.isCrossed,
       required this.title,
       required this.description});
-}
+} 
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,18 +26,24 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+*/
 class EditTodoPage extends StatefulWidget {
   @override
   _EditTodoPageState createState() => _EditTodoPageState();
 }
 
 class _EditTodoPageState extends State<EditTodoPage> {
+
+   TodosManager todoManager = TodosManager();
+    List<TodoItem> todoList = [];
+  
+  /*
+  
   List<TodoItem> todoList = [
     TodoItem(isCrossed: false, title: 'Task 1', description: 'Description 1'),
     TodoItem(isCrossed: false, title: 'Task 2', description: 'Description 2'),
     TodoItem(isCrossed: false, title: 'Task 3', description: 'Description 3'),
-  ];
+  ]; */
 
   @override
   Widget build(BuildContext context) {

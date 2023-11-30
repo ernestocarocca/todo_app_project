@@ -22,7 +22,7 @@ class OverviewPage extends StatelessWidget {
           _buildButton(context, 'ToDo', Icons.checklist, const ToDoPage()),
           _buildButton(
               context, 'In Progress', Icons.hourglass_bottom, const InProgressPage()),
-          _buildButton(context, 'Done', Icons.check_circle, const DonePage()),
+          _buildButton(context, 'Done', Icons.check_circle,  DonePage()),
         ],
       ),
        floatingActionButton: Container(
