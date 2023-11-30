@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/one_todo.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app_project/pages/addtodo_page.dart';
+import 'package:todo_app_project/pages/edittodo_page.dart';
+import 'package:todo_app_project/pages/todomodel_page.dart';
+
 
 class ToDoPage extends StatefulWidget {
   const ToDoPage({Key? key}) : super(key: key);
@@ -25,13 +30,25 @@ class ToDoPageState extends State<ToDoPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo Page'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
+        centerTitle: true,
+         actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 16.0),
+          child: IconButton(
+            icon: const Icon(Icons.post_add,
+            size: 38,
+            color: Colors.blue,
+            ),
             onPressed: () {
-              removeTodos(_savedTodoItems);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AddTodoPage(),
+                ),
+              );
             },
           ),
+
         ],
       ),
       body: Container(

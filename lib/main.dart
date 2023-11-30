@@ -75,28 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       body: pages[currentPage],
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.horizontal_split_rounded),
-            label: 'Overview',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.note_add),
-            label: 'Add todo',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.edit),
-            label: 'Edit todo',
-          ),
-        ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPage = index;
-          });
-        },
-        selectedIndex: currentPage,
-      ),
+     
     );
   }
 }

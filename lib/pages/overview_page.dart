@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/todo_page.dart';
 import 'package:todo_app_project/pages/inprogress_page.dart';
 import 'package:todo_app_project/pages/done_page.dart';
@@ -12,6 +13,8 @@ class OverviewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Overview Page'),
+        centerTitle: true,
+
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -22,8 +25,28 @@ class OverviewPage extends StatelessWidget {
           _buildButton(context, 'Done', Icons.check_circle, const DonePage()),
         ],
       ),
+       floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 20.0), // Add top margin
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const AddTodoPage(),
+              ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.blue,
+          elevation: 0,
+          child: const Icon(Icons.post_add, 
+          size: 60,),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
+
 
   Widget _buildButton(
       BuildContext context, String title, IconData icon, Widget destination) {

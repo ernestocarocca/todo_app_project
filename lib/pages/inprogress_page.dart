@@ -37,6 +37,7 @@ class _InProgressPageState extends State<InProgressPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('In Progress Page'),
+        centerTitle: true,
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),

@@ -23,6 +23,7 @@ class DonePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Done Page'),
+        centerTitle: true,
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
