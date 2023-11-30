@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/overview_page.dart';
-import 'package:todo_app_project/pages/testpage.dart';
-import 'package:todo_app_project/pages/todomodel_page.dart';
-
 import 'package:todo_app_project/pages/edittodo_page.dart';
 
-//hej
 Future<void> main() async {
   runApp(
     /* MultiProvider(
@@ -75,7 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       body: pages[currentPage],
-     
     );
   }
 }

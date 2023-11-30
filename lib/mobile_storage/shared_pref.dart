@@ -8,10 +8,10 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoItem {
-   String title;
+  String title;
   List<String> todoList; // Listan av uppgifter
   bool isCrossed;
- String description;
+  String description;
 
   TodoItem(
     this.title,
@@ -50,36 +50,40 @@ class TodosManager {
   }
 
   Future<void> addTodoList(List<TodoItem> todoList) async {
-    final List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+    List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
 
     for (TodoItem todo in todoList) {
-      todos.add(json.encode(todo.toJson()));
-      debugPrint(todos.last.toString());
+      final encodedTodo = json.encode(todo.toJson());
+      if (!todos.contains(encodedTodo)) {
+        todos.add(encodedTodo);
+      }
     }
 
     await _prefs.setStringList(_keyTodo, todos);
   }
 
-Future<void> removeTodos(List<TodoItem> todosToRemove) async {
-  List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+  Future<void> removeTodos(List<TodoItem> todosToRemove) async {
+    List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
 
-  todos.removeWhere((taskJson) {
-    final todoData = json.decode(taskJson);
-    final existingTodo = TodoItem.fromMap(todoData);
+    todos.removeWhere((taskJson) {
+      final todoData = json.decode(taskJson);
+      final existingTodo = TodoItem.fromMap(todoData);
 
-    return todosToRemove.any((todo) => _isMatchingTodoItem(existingTodo, todo));
-  });
+      return todosToRemove
+          .any((todo) => _isMatchingTodoItem(existingTodo, todo));
+    });
 
-  await _prefs.setStringList(_keyTodo, todos);
-}
+    await _prefs.setStringList(_keyTodo, todos);
+  }
 
-bool _isMatchingTodoItem(TodoItem existingTodo, TodoItem todoToRemove) {
-  return existingTodo.title == todoToRemove.title &&
-      existingTodo.description == todoToRemove.description &&
-      existingTodo.isCrossed == todoToRemove.isCrossed &&
-      existingTodo.todoList.length == todoToRemove.todoList.length &&
-      existingTodo.todoList.every((element) => todoToRemove.todoList.contains(element));
-}
+  bool _isMatchingTodoItem(TodoItem existingTodo, TodoItem todoToRemove) {
+    return existingTodo.title == todoToRemove.title &&
+        existingTodo.description == todoToRemove.description &&
+        existingTodo.isCrossed == todoToRemove.isCrossed &&
+        existingTodo.todoList.length == todoToRemove.todoList.length &&
+        existingTodo.todoList
+            .every((element) => todoToRemove.todoList.contains(element));
+  }
 
   Future<List<TodoItem>> getTodos() async {
     if (!_prefs.containsKey(_keyTodo)) {

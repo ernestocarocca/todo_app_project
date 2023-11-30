@@ -12,7 +12,7 @@ class InProgressPage extends StatefulWidget {
 
 class _InProgressPageState extends State<InProgressPage> {
   TodosManager todoManager = TodosManager();
-  List<TodoItem> _savedTodoItems = [];
+  List<TodoItem> _savedTodoItemsInProgres = [];
 
   @override
   void initState() {
@@ -52,9 +52,9 @@ class _InProgressPageState extends State<InProgressPage> {
           ),
         ),
         child: ListView.builder(
-          itemCount: _savedTodoItems.length,
+          itemCount: _savedTodoItemsInProgres.length,
           itemBuilder: (context, index) {
-            var inProgressTodo = _savedTodoItems[index];
+            var inProgressTodo = _savedTodoItemsInProgres[index];
             return Card(
               color: Colors.white70, // Customize your card color
               elevation: 5.0,
@@ -91,7 +91,7 @@ class _InProgressPageState extends State<InProgressPage> {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
       setState(() {
-        _savedTodoItems = loadedTodos;
+        _savedTodoItemsInProgres = loadedTodos;
       });
     } catch (e) {
       print('Error loading todos: $e');
