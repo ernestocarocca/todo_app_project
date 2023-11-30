@@ -30,7 +30,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   void _onButtonPressed() {
     addDescription();
-    _loadTodos();
+
     print('Button pressed!');
   }
 
@@ -122,9 +122,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
               child: ElevatedButton(
                 onPressed: () {
                   addNewItem();
-                  saveTodoItem();
 
-                  _loadTodos();
                   //_saveTodos(_savedTodoItems);
                 },
                 child: const Text('Add Todo'),
@@ -171,24 +169,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
     }
   }*/
 
-  Future<void> addNewItem() async {
-    String newTodoItem = titleController.text.trim();
-    //String description = descriptionController.text.trim();
-
-    if (newTodoItem.isNotEmpty) {
-      //List<String> todoDescriptions =
-      //   description.isNotEmpty ? description.split(" ") : [];
-      // TodoItem newItem = TodoItem('', [], false, description);
-      //  _savedTodoItems.add(newItem);
-      await _saveTodos(_savedTodoItems);
-      titleController.clear();
-      descriptionController.clear();
-    }
-
-    for (dynamic p in _savedTodoItems) {
-      debugPrint(p.toString());
-    }
-  }
 /*
   void addDescription() {
     String newDescription = descriptionController.text.trim();
@@ -208,17 +188,19 @@ class _AddTodoPageState extends State<AddTodoPage> {
     if (newDescription.isNotEmpty) {
       setState(() {
         newTodoDescriptions.add(newDescription);
-        _savedTodoItems.map((e) => {newTodoDescriptions = e.todoList});
         descriptionController.clear();
       });
     }
   }
 
-  void saveTodoItem() async {
+  Future<void> addNewItem() async {
     String newTodoItem = titleController.text.trim();
-    if (newTodoDescriptions.isNotEmpty) {
-      TodoItem newItem = TodoItem(newTodoItem, newTodoDescriptions, false,
-          ''); // Använd newTodoDescriptions
+    if (newTodoItem.isNotEmpty) {
+      TodoItem newItem = TodoItem(
+          newTodoItem,
+          List.from(newTodoDescriptions),
+          false,
+          ''); // Kopiera newTodoDescriptions för att undvika direkt referens till listan
       _savedTodoItems.add(newItem);
 
       // Spara den uppdaterade listan av todo-items
@@ -226,14 +208,22 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
       // Rensa input-fält och beskrivningslistan
       setState(() {
+        titleController.clear();
         newTodoDescriptions.clear();
       });
     }
   }
 
+  void saveTodoItem() async {
+    // Funktionen för att spara TodoItem har integrerats i addNewItem()
+  }
+
   Future<void> _saveTodos(List<TodoItem> todoItems) async {
     await todoManager.addTodoList(todoItems);
   }
+
+
+
 
   void _toggleTodo(int index) {
     setState(() {

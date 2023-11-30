@@ -12,7 +12,7 @@ class ToDoPage extends StatefulWidget {
 
 class ToDoPageState extends State<ToDoPage> {
   TodosManager todoManager = TodosManager();
-  List<TodoItem> _savedTodoItems = [];
+  List<TodoItem> _savedTodoItemsInTodoPage = [];
 
   @override
   void initState() {
@@ -57,9 +57,9 @@ class ToDoPageState extends State<ToDoPage> {
           ),
         ),
         child: ListView.builder(
-          itemCount: _savedTodoItems.length,
+          itemCount: _savedTodoItemsInTodoPage.length,
           itemBuilder: (context, index) {
-            TodoItem todoOnThisIdex = _savedTodoItems[index];
+            TodoItem todoOnThisIdex = _savedTodoItemsInTodoPage[index];
             return GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -87,9 +87,9 @@ class ToDoPageState extends State<ToDoPage> {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
       setState(() {
-        _savedTodoItems = loadedTodos;
-        print(_savedTodoItems.length);
-        debugPrint('load $_savedTodoItems');
+     _savedTodoItemsInTodoPage = loadedTodos;
+        print(_savedTodoItemsInTodoPage.length);
+        debugPrint('load $_savedTodoItemsInTodoPage');
       });
     } catch (e) {
       print('Error loading todos: $e');
