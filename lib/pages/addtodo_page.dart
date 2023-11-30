@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:todo_app_project/mobile_storage/camera_imagepicker.dart';
 
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
@@ -31,6 +34,15 @@ class _AddTodoPageState extends State<AddTodoPage> {
     print('Button pressed!');
   }
 
+  final CameraService _cameraService = CameraService();
+
+  Future<void> _captureAndSaveImage() async {
+    File? imageFile = await _cameraService.takePhoto();
+    if (imageFile != null) {
+      await _cameraService.saveImageToDevice(imageFile);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +63,11 @@ class _AddTodoPageState extends State<AddTodoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            IconButton(
+                onPressed: _captureAndSaveImage,
+                tooltip: 'Take Photo',
+                icon: const Icon(Icons.camera_alt_rounded)),
+
             const Text('Title:'),
             TextField(
               controller: titleController,
@@ -99,14 +116,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 },
               ),
             ),
-           
+
             Padding(
-            
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: () {
                   addNewItem();
                   saveTodoItem();
+
                   _loadTodos();
                   //_saveTodos(_savedTodoItems);
                 },
@@ -122,7 +139,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   void _loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
-      debugPrint(loadedTodos.toString());
+      //  debugPrint(loadedTodos[index].todoList.toString());
       setState(() {
         _savedTodoItems = loadedTodos;
       });
