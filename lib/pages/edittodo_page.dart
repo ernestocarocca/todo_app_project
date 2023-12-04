@@ -37,13 +37,6 @@ class _EditTodoPageState extends State<EditTodoPage> {
    TodosManager todoManager = TodosManager();
     List<TodoItem> todoList = [];
   
-  /*
-  
-  List<TodoItem> todoList = [
-    TodoItem(isCrossed: false, title: 'Task 1', description: 'Description 1'),
-    TodoItem(isCrossed: false, title: 'Task 2', description: 'Description 2'),
-    TodoItem(isCrossed: false, title: 'Task 3', description: 'Description 3'),
-  ]; */
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +69,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
                     _editTodo(index, isTitle: false);
                   },
                   child: Text(
-                    todoList[index].description,
+                    todoList[index].title,
                     style: TextStyle(
                       decoration: todoList[index].isCrossed
                           ? TextDecoration.lineThrough
@@ -120,7 +113,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
 
   void _editTodo(int index, {required bool isTitle}) async {
     String currentValue =
-        isTitle ? todoList[index].title : todoList[index].description;
+        isTitle ? todoList[index].title : todoList[index].title;
     TextEditingController textController =
         TextEditingController(text: currentValue);
 // Ernesto catch if String value is not empty (null)
@@ -155,7 +148,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
         if (isTitle) {
           todoList[index].title = newValue;
         } else {
-          todoList[index].description = newValue;
+          todoList[index].title = newValue;
         }
       });
     }

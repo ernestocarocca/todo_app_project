@@ -14,14 +14,16 @@ class ToDoDetailsPage extends StatefulWidget {
 }
 
 class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
-  List<bool> taskCompletionStatus = [];
+
+  TodosManager todosManager = TodosManager();
+
+  List<TodoItem> _saveTodoListInOnePage = [];
 
   @override
   void initState() {
     super.initState();
     // Initialize the list with the completion status of each task
-    taskCompletionStatus =
-        List.generate(widget.todoItem.todoList.length, (index) => false);
+
   }
 
   @override
@@ -47,13 +49,42 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
               ),
             ),
             const SizedBox(height: 8.0),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.todoItem.todoList.length,
-                itemBuilder: (context, index) {
-                  return _buildTaskItem(index);
-                },
-              ),
+
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.todoItem.todoList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  trailing: Checkbox(
+
+                    value: widget.todoItem.todoList[index].isDone,
+                    onChanged: (value) {
+                      setState(() {
+                        // Toggle the completion status of the task
+
+                        widget.todoItem.todoList[index].isDone = value!;
+                        // Handle your logic for overall task completion here
+
+                        if (widget.todoItem.todoList
+                            .map((task) => task.isDone)
+                            .toList()
+                            .contains(!true)) {
+                          widget.todoItem.isCrossed = false;
+                        } else {
+                          widget.todoItem.isCrossed = true;
+                        }
+                        print(widget.todoItem);
+
+                        updateTodo(widget.todoItem);
+
+                      });
+                    },
+                    activeColor: Colors.green,
+                    checkColor: Colors.white,
+                  ),
+                  title: Text(widget.todoItem.todoList[index].taskName),
+                );
+              },
             ),
           ],
         ),
@@ -61,38 +92,14 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
     );
   }
 
-  Widget _buildTaskItem(int index) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 3),
-          ),
-        ],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        trailing: Checkbox(
-          value: taskCompletionStatus[index],
-          onChanged: (value) {
-            setState(() {
-              // Toggle the completion status of the task
-              taskCompletionStatus[index] = value!;
-              // Handle your logic for overall task completion here
-              widget.todoItem.isCrossed =
-                  taskCompletionStatus.contains(true);
-            });
-          },
-          activeColor: Colors.green,
-          checkColor: Colors.white,
-        ),
-        title: Text(widget.todoItem.todoList[index]),
-      ),
-    );
+
+  Future<void> _saveTodos(List<TodoItem> todoItems) async {
+    await todosManager.addTodoList(todoItems);
+  }
+
+  Future<void> updateTodo(TodoItem todo) async {
+    await todosManager.updateTodo(todo);
   }
 }
+
+
