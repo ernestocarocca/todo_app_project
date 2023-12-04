@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 class ToDoDetailsPage extends StatefulWidget {
@@ -10,18 +8,22 @@ class ToDoDetailsPage extends StatefulWidget {
     Key? key,
     required this.todoItem,
   }) : super(key: key);
+
   @override
   _ToDoDetailsPageState createState() => _ToDoDetailsPageState();
 }
 
 class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
+
   TodosManager todosManager = TodosManager();
 
   List<TodoItem> _saveTodoListInOnePage = [];
+
   @override
   void initState() {
     super.initState();
     // Initialize the list with the completion status of each task
+
   }
 
   @override
@@ -52,6 +54,7 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   trailing: Checkbox(
+
                     value: widget.todoItem.todoList[index].isDone,
                     onChanged: (value) {
                       setState(() {
@@ -71,6 +74,7 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
                         print(widget.todoItem);
 
                         updateTodo(widget.todoItem);
+
                       });
                     },
                     activeColor: Colors.green,
@@ -86,6 +90,7 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
     );
   }
 
+
   Future<void> _saveTodos(List<TodoItem> todoItems) async {
     await todosManager.addTodoList(todoItems);
   }
@@ -94,3 +99,4 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
     await todosManager.updateTodo(todo);
   }
 }
+
