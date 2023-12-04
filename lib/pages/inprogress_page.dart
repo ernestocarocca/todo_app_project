@@ -22,8 +22,6 @@ class _InProgressPageState extends State<InProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('In Progress Page'),
@@ -86,7 +84,8 @@ class _InProgressPageState extends State<InProgressPage> {
         for (TodoItem todo in loadedTodos) {
           List<TodoTask> tasks = todo.todoList;
           List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
-          if (isDoneList.contains(true)) {
+
+          if (todo.isCrossed != true && isDoneList.contains(true)) {
             todosToShow.add(todo);
           }
         }

@@ -19,17 +19,7 @@ class _DonePageState extends State<DonePage> {
 
   @override
   Widget build(BuildContext context) {
-    // var doneModel = [1]; //Provider.of<DoneModel>(context);
-/*
-    // Sample data for testing
-    var sampleData = [
-      DoneItem(title: 'title', description: 'Description blal'),
-      DoneItem(title: 'title plugga', description: 'Description blalan'),
-      DoneItem(title: 'Completed hamster', description: 'Description ubcs'),
-    ]; */
 
-    // Add sample data to the DoneModel
-    //  doneModel.addDoneItems(sampleData);
 
     return Scaffold(
       appBar: AppBar(
