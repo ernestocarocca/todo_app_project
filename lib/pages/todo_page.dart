@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
-import 'package:todo_app_project/pages/one_todo.dart';
+import 'package:todo_app_project/show_on_todo/one_todo.dart';
+
 
 class ToDoPage extends StatefulWidget {
   const ToDoPage({Key? key}) : super(key: key);
