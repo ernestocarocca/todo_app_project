@@ -45,9 +45,11 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
             Text(
               'Status: ${widget.todoItem.isCrossed ? 'Completed' : 'Incomplete'}',
               style: TextStyle(
-                  color: widget.todoItem.isCrossed ? Colors.green : Colors.red),
+                color: widget.todoItem.isCrossed ? Colors.green : Colors.red,
+              ),
             ),
             const SizedBox(height: 8.0),
+
             ListView.builder(
               shrinkWrap: true,
               itemCount: widget.todoItem.todoList.length,
@@ -99,4 +101,5 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
     await todosManager.updateTodo(todo);
   }
 }
+
 

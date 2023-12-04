@@ -44,6 +44,17 @@ class ToDoPageState extends State<ToDoPage> {
                 );
               },
             ),
+
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AddTodoPage(capturedImagePath: '',),
+                ),
+              );
+            },
+          ),
+
           )
         ],
       ),
