@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
-import 'package:todo_app_project/pages/todomodel_page.dart';
+import 'package:todo_app_project/show_on_todo/on_progres_todo.dart';
 
 class InProgressPage extends StatefulWidget {
   const InProgressPage({Key? key}) : super(key: key);
@@ -42,31 +41,35 @@ class _InProgressPageState extends State<InProgressPage> {
         child: ListView.builder(
           itemCount: _savedTodoItemsInProgres.length,
           itemBuilder: (context, index) {
-            var inProgressTodo = _savedTodoItemsInProgres[index];
-            return Card(
-              color: Colors.white70, // Customize your card color
-              elevation: 5.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListTile(
-                title: Text(
-                  inProgressTodo.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
+            TodoItem inProgressTodoIndex = _savedTodoItemsInProgres[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => InProgresDetailsPage(
+                      todoItem: inProgressTodoIndex,
+                    ),
+                  ),
+                );
+              },
+              child: Card(
+                color: Colors.white70, // Customize your card color
+                elevation: 5.0,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  title: Text(
+                    inProgressTodoIndex.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  subtitle: Text(
+                    inProgressTodoIndex.title,
+                    style: const TextStyle(fontSize: 14.0),
                   ),
                 ),
-                subtitle: Text(
-                  inProgressTodo.title,
-                  style: const TextStyle(fontSize: 14.0),
-                ),
-                /*   onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => EditTodoPage(),
-                    ),
-                  );
-                },*/
               ),
             );
           },

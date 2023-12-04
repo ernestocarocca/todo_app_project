@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/edittodo_page.dart';
+import 'package:todo_app_project/show_on_todo/one_done_todo_page.dart';
 
 class DonePage extends StatefulWidget {
   @override
@@ -19,8 +20,6 @@ class _DonePageState extends State<DonePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Done Page'),
@@ -39,30 +38,42 @@ class _DonePageState extends State<DonePage> {
           itemCount: _savedTodoItemsInDone.length,
           itemBuilder: (context, index) {
             var doneItem = _savedTodoItemsInDone[index];
-            return Card(
-              color: Colors.white70, // Customize card color
-              elevation: 5.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListTile(
-                title: Text(
-                  doneItem.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                ),
-                subtitle: Text(
-                  doneItem.title,
-                  style: const TextStyle(fontSize: 14.0),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => EditTodoPage(),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => InDoneDetailsPage(
+                      todoItem: doneItem,
                     ),
-                  );
-                },
+                  ),
+                );
+              },
+              child: Card(
+                color: Colors.white70, // Customize card color
+                elevation: 5.0,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  title: Text(
+                    doneItem.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  subtitle: Text(
+                    doneItem.title,
+                    style: const TextStyle(fontSize: 14.0),
+                  ),
+                  /* onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => EditTodoPage(),
+                      ),
+                    );
+                  }, */
+                ),
               ),
             );
           },
