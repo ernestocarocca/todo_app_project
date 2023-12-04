@@ -9,7 +9,13 @@ class DonePage extends StatefulWidget {
 
 class _DonePageState extends State<DonePage> {
   TodosManager todoManager = TodosManager();
-  List<TodoItem> _savedTodoItems = [];
+  List<TodoItem> _savedTodoItemsInDone = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +46,9 @@ class _DonePageState extends State<DonePage> {
           ),
         ),
         child: ListView.builder(
-          itemCount: _savedTodoItems.length,
+          itemCount: _savedTodoItemsInDone.length,
           itemBuilder: (context, index) {
-            var doneItem = _savedTodoItems[index];
+            var doneItem = _savedTodoItemsInDone[index];
             return Card(
               color: Colors.white70, // Customize card color
               elevation: 5.0,
@@ -56,7 +62,7 @@ class _DonePageState extends State<DonePage> {
                   ),
                 ),
                 subtitle: Text(
-                  doneItem.description,
+                  doneItem.title,
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 onTap: () {
@@ -75,14 +81,24 @@ class _DonePageState extends State<DonePage> {
     );
   }
 
-  void _loadTodos() async {
+  void loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
-
+      print(loadedTodos);
+      List<TodoItem> todosToShow = [];
       setState(() {
-        
+        for (TodoItem todo in loadedTodos) {
+          List<TodoTask> tasks = todo.todoList;
+          List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
+          if (!isDoneList.contains(false)) {
+            todosToShow.add(todo);
+          }
+        }
+        setState(() {
+          _savedTodoItemsInDone = List.from(todosToShow);
+          todosToShow.clear();
+        });
       });
-      debugPrint(loadedTodos.toString());
     } catch (e) {
       print('Error loading todos: $e');
     }
