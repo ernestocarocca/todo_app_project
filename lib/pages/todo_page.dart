@@ -18,7 +18,6 @@ class ToDoPageState extends State<ToDoPage> {
   void initState() {
     super.initState();
     loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
-    print('loaded in init');
   }
 
   @override
@@ -27,23 +26,24 @@ class ToDoPageState extends State<ToDoPage> {
       appBar: AppBar(
         title: const Text('ToDo Page'),
         centerTitle: true,
-         actions: [
+        actions: [
           Container(
             padding: const EdgeInsets.only(right: 16.0),
-          child: IconButton(
-            icon: const Icon(Icons.post_add,
-            size: 38,
-            color: Colors.blue,
+            child: IconButton(
+              icon: const Icon(
+                Icons.post_add,
+                size: 38,
+                color: Colors.blue,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const AddTodoPage(),
+                  ),
+                );
+              },
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const AddTodoPage(),
-                ),
-              );
-            },
-          ),
           )
         ],
       ),
@@ -66,7 +66,8 @@ class ToDoPageState extends State<ToDoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => ToDoDetailsPage(
-                      todoItem: todoOnThisIdex, // Skicka hela todoItem-objektet
+                      todoItem: todoOnThisIdex,
+                      // Skicka hela todoItem-objektet
                     ),
                   ),
                 );
@@ -86,10 +87,20 @@ class ToDoPageState extends State<ToDoPage> {
   void loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
+      print(loadedTodos);
+      List<TodoItem> todosToShow = [];
       setState(() {
-     _savedTodoItemsInTodoPage = loadedTodos;
-        print(_savedTodoItemsInTodoPage.length);
-        debugPrint('load $_savedTodoItemsInTodoPage');
+        for (TodoItem todo in loadedTodos) {
+          List<TodoTask> tasks = todo.todoList;
+          List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
+          if (!isDoneList.contains(true)) {
+            todosToShow.add(todo);
+          }
+        }
+        setState(() {
+          _savedTodoItemsInTodoPage = List.from(todosToShow);
+          todosToShow.clear();
+        });
       });
     } catch (e) {
       print('Error loading todos: $e');
@@ -98,6 +109,6 @@ class ToDoPageState extends State<ToDoPage> {
 
   void removeTodos(List<TodoItem> todo) async {
     await todoManager.removeTodos(todo);
-    loadTodos();
+
   }
 }

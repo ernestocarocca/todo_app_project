@@ -5,6 +5,7 @@ import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 class ToDoDetailsPage extends StatefulWidget {
   final TodoItem todoItem;
+
   const ToDoDetailsPage({
     Key? key,
     required this.todoItem,
@@ -15,14 +16,12 @@ class ToDoDetailsPage extends StatefulWidget {
 
 class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
   TodosManager todosManager = TodosManager();
-  List<bool> taskCompletionStatus = [];
+
   List<TodoItem> _saveTodoListInOnePage = [];
   @override
   void initState() {
     super.initState();
     // Initialize the list with the completion status of each task
-    taskCompletionStatus =
-        List.generate(widget.todoItem.todoList.length, (index) => false);
   }
 
   @override
@@ -53,18 +52,25 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   trailing: Checkbox(
-                    value: taskCompletionStatus[index],
+                    value: widget.todoItem.todoList[index].isDone,
                     onChanged: (value) {
                       setState(() {
                         // Toggle the completion status of the task
-                        taskCompletionStatus[index] = value!;
+
+                        widget.todoItem.todoList[index].isDone = value!;
                         // Handle your logic for overall task completion here
 
-                        if (taskCompletionStatus.contains(false)) {
+                        if (widget.todoItem.todoList
+                            .map((task) => task.isDone)
+                            .toList()
+                            .contains(!true)) {
                           widget.todoItem.isCrossed = false;
                         } else {
                           widget.todoItem.isCrossed = true;
                         }
+                        print(widget.todoItem);
+
+                        updateTodo(widget.todoItem);
                       });
                     },
                     activeColor: Colors.green,
@@ -78,5 +84,13 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _saveTodos(List<TodoItem> todoItems) async {
+    await todosManager.addTodoList(todoItems);
+  }
+
+  Future<void> updateTodo(TodoItem todo) async {
+    await todosManager.updateTodo(todo);
   }
 }

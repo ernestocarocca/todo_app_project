@@ -1,6 +1,6 @@
-
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoItem {
@@ -14,11 +14,17 @@ class TodoItem {
     required this.title,
     required this.todoList,
     required this.isCrossed,
+
     //  required this.description,
   }) : id = counter++;
+  TodoItem.fromId(
+      {required this.title,
+      required this.todoList,
+      required this.isCrossed,
+      required this.id});
 
-  void addTask(String taskName) {
-    todoList.add(TodoTask(taskName: taskName));
+  void addTask(String taskName, bool done) {
+    todoList.add(TodoTask(taskName: taskName, isDone: done));
   }
 
   void removeTask(TodoTask task) {
@@ -51,7 +57,8 @@ class TodoItem {
   }
 
   factory TodoItem.fromJson(Map<String, dynamic> map) {
-    return TodoItem(
+    return TodoItem.fromId(
+      id: map['id'],
       title: map['title'],
       todoList: (map['todoList'] as List<dynamic>)
           .map((task) => TodoTask.fromJson(task))
@@ -67,22 +74,25 @@ class TodoTask {
   static int _taskCounter = 0;
   int taskId;
   String taskName;
+  bool isDone;
   TodoTask({
     required this.taskName,
+    required this.isDone,
   }) : taskId = _taskCounter++;
   Map<String, dynamic> toJson() {
-    return {'id': taskId, 'taskName': taskName};
+    return {'id': taskId, 'taskName': taskName, 'isDone': isDone};
   }
 
   factory TodoTask.fromJson(Map<String, dynamic> map) {
     return TodoTask(
       taskName: map['taskName'],
+      isDone: map['isDone'],
     );
   }
 
   @override
   String toString() {
-    return " id:$taskId, taskName:  $taskName ";
+    return " id:$taskId, taskName:  $taskName, isDone:  $isDone";
   }
 }
 
@@ -96,25 +106,49 @@ class TodosManager {
   }
 
   Future<void> addTodoList(List<TodoItem> todoList) async {
-    List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
-    print(todos);
+    //List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+List<String> temp = [];
     for (TodoItem todo in todoList) {
       final encodedTodo = json.encode(todo.toJson());
-
-      todos.add(encodedTodo);
+temp.add(encodedTodo);
+    // todos.add(encodedTodo);
     }
-    print(todos);
+
+    await _prefs.setStringList(_keyTodo, temp);
+  }
+
+  Future<void> updateTodo(TodoItem todo) async {
+    List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
+
+    String encodedTodo = json.encode(todo.toJson());
+
+    List<TodoItem> listTodos = [];
+    for (String todoJson in todos) {
+      try {
+        final Map<String, dynamic> todoData = json.decode(todoJson);
+
+        listTodos.add(TodoItem.fromJson(todoData));
+      } catch (e) {
+        print('Fel vid avkodning av TodoItem: $e');
+      }
+    }
+    int updateIndex = 0;
+    for (int i = 0; i < listTodos.length; i++) {
+      if (todo.id == listTodos[i].id) {
+        updateIndex = i;
+      }
+    }
+    todos[updateIndex] = encodedTodo;
     await _prefs.setStringList(_keyTodo, todos);
   }
 
   Future<void> removeTodos(List<TodoItem> todosToRemove) async {
     List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
-    print(' removeTodo: todos  $todos');
+
     todos.removeWhere((taskJson) {
       final todoData = json.decode(taskJson);
-      print(' removeTodo: tdodoData  ${todoData.runtimeType}');
+
       final existingTodo = TodoItem.fromJson(todoData);
-      print(' removeTodo: existingTodo  $existingTodo');
 
       return todosToRemove
           .any((todo) => _isMatchingTodoItem(existingTodo, todo));
