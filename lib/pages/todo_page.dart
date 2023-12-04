@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/addtodo_page.dart';
-import 'package:todo_app_project/show_on_todo/on_progres_todo.dart';
-import 'package:todo_app_project/show_on_todo/one_todo.dart';
+import 'package:todo_app_project/pages/one_todo.dart';
 
 class ToDoPage extends StatefulWidget {
   const ToDoPage({Key? key}) : super(key: key);
@@ -27,24 +26,23 @@ class ToDoPageState extends State<ToDoPage> {
       appBar: AppBar(
         title: const Text('ToDo Page'),
         centerTitle: true,
-        actions: [
+         actions: [
           Container(
             padding: const EdgeInsets.only(right: 16.0),
-            child: IconButton(
-              icon: const Icon(
-                Icons.post_add,
-                size: 38,
-                color: Colors.blue,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const AddTodoPage(),
-                  ),
-                );
-              },
+          child: IconButton(
+            icon: const Icon(Icons.post_add,
+            size: 38,
+            color: Colors.blue,
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AddTodoPage(capturedImagePath: '',),
+                ),
+              );
+            },
+          ),
           )
         ],
       ),
@@ -66,9 +64,8 @@ class ToDoPageState extends State<ToDoPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) =>  InProgresDetailsPage(
-                      todoItem: todoOnThisIdex,
-                      // Skicka hela todoItem-objektet
+                    builder: (BuildContext context) => ToDoDetailsPage(
+                      todoItem: todoOnThisIdex, // Skicka hela todoItem-objektet
                     ),
                   ),
                 );
@@ -110,6 +107,6 @@ class ToDoPageState extends State<ToDoPage> {
 
   void removeTodos(List<TodoItem> todo) async {
     await todoManager.removeTodos(todo);
-
+    loadTodos();
   }
 }

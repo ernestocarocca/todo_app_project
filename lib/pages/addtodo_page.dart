@@ -1,19 +1,29 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:image_picker/image_picker.dart';
+
 import 'package:todo_app_project/mobile_storage/camera_imagepicker.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 //Ernesto: moved TodoItem class to Shae_pref file
 
 class AddTodoPage extends StatefulWidget {
-  const AddTodoPage({Key? key}) : super(key: key);
+  const AddTodoPage({Key? key, required this.capturedImagePath})
+      : super(key: key);
+
+  final String? capturedImagePath;
 
   @override
   _AddTodoPageState createState() => _AddTodoPageState();
 }
 
 class _AddTodoPageState extends State<AddTodoPage> {
+//variable that saves the path to the image taken or choosen from gallery
+  String? _selectedImagePath;
+
   TodosManager todoManager = TodosManager();
 
   List<TodoItem> _savedTodoItems = [];
@@ -57,11 +67,21 @@ class _AddTodoPageState extends State<AddTodoPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            IconButton(
-                onPressed: _captureAndSaveImage,
-                tooltip: 'Take Photo',
-                icon: const Icon(Icons.camera_alt_rounded)),
-
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: _pickImageFromCamera, //opens camera
+                  tooltip: 'Take Photo',
+                  icon: const Icon(Icons.camera_alt_rounded),
+                ),
+                IconButton(
+                  onPressed: _pickImageFromGallery, //opens gallery
+                  tooltip: 'Open Gallery',
+                  icon: const Icon(Icons.photo_library),
+                ),
+              ],
+            ),
             const Text('Title:'),
             TextField(
               controller: titleController,
@@ -75,11 +95,29 @@ class _AddTodoPageState extends State<AddTodoPage> {
             TextField(
               controller: descriptionController,
               decoration: InputDecoration(
-                  hintText: 'Enter description',
-                  suffixIcon: IconButton(
-                    onPressed: addTask,
-                    icon: const Icon(Icons.add),
-                  )),
+                hintText: 'Enter description',
+                suffixIcon: IconButton(
+                  onPressed: addTask,
+                  icon: const Icon(Icons.add),
+                ),
+              ),
+            ),
+
+            //shows the image by using the variable  _selectedImagePath where the path is stored to the choosen image
+            const SizedBox(height: 16.0),
+            _selectedImagePath != null
+                ? Image.file(
+                    File(_selectedImagePath!),
+                    height: 150,
+                    width: 150,
+                  )
+                : SizedBox.shrink(),
+            const SizedBox(height: 20),
+            Text(
+              _selectedImagePath != null
+                  ? 'Selected Image: $_selectedImagePath'
+                  : 'Please select an image',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
 
             const SizedBox(height: 16.0),
@@ -115,6 +153,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
               child: ElevatedButton(
                 onPressed: () {
                   addNewTodo();
+
+                  if (widget.capturedImagePath != null) {
+                    print('Captured Image Path: ${widget.capturedImagePath}');
+                  }
 
                   //_saveTodos(_savedTodoItems);
                 },
@@ -190,6 +232,28 @@ class _AddTodoPageState extends State<AddTodoPage> {
   void _toggleTodo(int index) {
     setState(() {
       _savedTodoItems[index].isCrossed = !_savedTodoItems[index].isCrossed;
+    });
+  }
+
+// funktion to choose a image from gallery
+  Future _pickImageFromGallery() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImagePath = returnedImage.path;
+    });
+  }
+
+// funktion to take a image
+  Future _pickImageFromCamera() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (returnedImage == null) return;
+    setState(() {
+      _selectedImagePath = returnedImage.path;
     });
   }
 }

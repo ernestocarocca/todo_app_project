@@ -5,10 +5,9 @@ import 'package:path_provider/path_provider.dart';
 
 class CameraService {
   final ImagePicker _picker = ImagePicker();
-    final directory =  getApplicationDocumentsDirectory();
+  final directory = getApplicationDocumentsDirectory();
 
-
-     Future<void> captureAndSaveImage() async {
+  Future<void> captureAndSaveImage() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
 
@@ -17,7 +16,6 @@ class CameraService {
     // Do something with the imageFile, like saving the captured image
   }
 
-   
   Future<File?> takePhoto() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -30,28 +28,25 @@ class CameraService {
     return null;
   }
 
- 
+  Future<void> saveImageToDevice(File image) async {
+    try {
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
 
-Future<void> saveImageToDevice(File image) async {
-  try {
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    String appDocPath = appDocDir.path;
+      // Ange sökvägen där du vill spara bilden
+      String destinationPath = '$appDocPath/images/';
 
-    // Ange sökvägen där du vill spara bilden
-    String destinationPath = '$appDocPath/images/';
+      // Skapa mappen om den inte finns
+      await Directory(destinationPath).create(recursive: true);
 
-    // Skapa mappen om den inte finns
-    await Directory(destinationPath).create(recursive: true);
+      // Lägg till filnamnet till sökvägen
+      destinationPath += 'image.jpg';
 
-    // Lägg till filnamnet till sökvägen
-    destinationPath += 'image.jpg';
-
-    // Kopiera filen till destinationen
-    File newImage = await image.copy(destinationPath);
-    print('Bilden sparad på: ${newImage.path}');
-  } catch (e) {
-    print('Fel vid sparande av bild: $e');
+      // Kopiera filen till destinationen
+      File newImage = await image.copy(destinationPath);
+      print('Bilden sparad på: ${newImage.path}');
+    } catch (e) {
+      print('Fel vid sparande av bild: $e');
+    }
   }
-}
-
 }
