@@ -17,7 +17,7 @@ class _InProgressPageState extends State<InProgressPage> {
   @override
   void initState() {
     super.initState();
-    _loadTodos();
+    loadTodos();
   }
 
   @override
@@ -87,17 +87,23 @@ class _InProgressPageState extends State<InProgressPage> {
     );
   }
 
-  Future<void> _loadTodos() async {
+  void loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
+      print(loadedTodos);
+      List<TodoItem> todosToShow = [];
       setState(() {
-      
-        for (TodoItem item in loadedTodos) {
-          if (!item.isCrossed) {
-           _savedTodoItemsInProgres.add(item);
-
+        for (TodoItem todo in loadedTodos) {
+          List<TodoTask> tasks = todo.todoList;
+          List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
+          if (isDoneList.contains(true)) {
+            todosToShow.add(todo);
           }
         }
+        setState(() {
+          _savedTodoItemsInProgres = List.from(todosToShow);
+          todosToShow.clear();
+        });
       });
     } catch (e) {
       print('Error loading todos: $e');

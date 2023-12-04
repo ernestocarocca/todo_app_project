@@ -12,12 +12,13 @@ class _DonePageState extends State<DonePage> {
   List<TodoItem> _savedTodoItemsInDone = [];
 
   @override
+  void initState() {
+    super.initState();
+    loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
+  }
+
+  @override
   Widget build(BuildContext context) {
-    @override
-    void initState() {
-      super.initState();
-      _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
-    }
     // var doneModel = [1]; //Provider.of<DoneModel>(context);
 /*
     // Sample data for testing
@@ -80,15 +81,23 @@ class _DonePageState extends State<DonePage> {
     );
   }
 
-  Future<void> _loadTodos() async {
+  void loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
+      print(loadedTodos);
+      List<TodoItem> todosToShow = [];
       setState(() {
-        for (TodoItem item in loadedTodos) {
-          if (item.isCrossed) {
-            _savedTodoItemsInDone.add(item);
+        for (TodoItem todo in loadedTodos) {
+          List<TodoTask> tasks = todo.todoList;
+          List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
+          if (!isDoneList.contains(false)) {
+            todosToShow.add(todo);
           }
         }
+        setState(() {
+          _savedTodoItemsInDone = List.from(todosToShow);
+          todosToShow.clear();
+        });
       });
     } catch (e) {
       print('Error loading todos: $e');
