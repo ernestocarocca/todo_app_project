@@ -14,6 +14,17 @@ class ToDoDetailsPage extends StatefulWidget {
 }
 
 class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
+  TodosManager todosManager = TodosManager();
+  List<bool> taskCompletionStatus = [];
+  List<TodoItem> _saveTodoListInOnePage = [];
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the list with the completion status of each task
+    taskCompletionStatus =
+        List.generate(widget.todoItem.todoList.length, (index) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,21 +53,24 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   trailing: Checkbox(
-                    value: widget.todoItem.isCrossed,
+                    value: taskCompletionStatus[index],
                     onChanged: (value) {
                       setState(() {
-                        for (String pressed in widget.todoItem.todoList) {
-                          if (pressed[index] == pressed[index]) {
-                            widget.todoItem.isCrossed =
-                                !widget.todoItem.isCrossed;
-                          }
+                        // Toggle the completion status of the task
+                        taskCompletionStatus[index] = value!;
+                        // Handle your logic for overall task completion here
+
+                        if (taskCompletionStatus.contains(false)) {
+                          widget.todoItem.isCrossed = false;
+                        } else {
+                          widget.todoItem.isCrossed = true;
                         }
                       });
                     },
                     activeColor: Colors.green,
                     checkColor: Colors.white,
                   ),
-                  title: Text(widget.todoItem.todoList[index]),
+                  title: Text(widget.todoItem.todoList[index].taskName),
                 );
               },
             ),

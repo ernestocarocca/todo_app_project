@@ -22,7 +22,7 @@ class _InProgressPageState extends State<InProgressPage> {
 
   @override
   Widget build(BuildContext context) {
- //   var inProgressModel = Provider.of<InProgressModel>(context);
+    //   var inProgressModel = Provider.of<InProgressModel>(context);
 /*
     // Sample data for testing
     var sampleDatas = [
@@ -32,7 +32,7 @@ class _InProgressPageState extends State<InProgressPage> {
     ]; */
 
     // Add sample data to the InProgressModel
-  //  inProgressModel.addInProgressItems(sampleDatas);
+    //  inProgressModel.addInProgressItems(sampleDatas);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +68,7 @@ class _InProgressPageState extends State<InProgressPage> {
                   ),
                 ),
                 subtitle: Text(
-                  inProgressTodo.description,
+                  inProgressTodo.title,
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 /*   onTap: () {
@@ -91,7 +91,13 @@ class _InProgressPageState extends State<InProgressPage> {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
       setState(() {
-        _savedTodoItemsInProgres = loadedTodos;
+      
+        for (TodoItem item in loadedTodos) {
+          if (!item.isCrossed) {
+           _savedTodoItemsInProgres.add(item);
+
+          }
+        }
       });
     } catch (e) {
       print('Error loading todos: $e');

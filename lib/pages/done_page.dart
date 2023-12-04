@@ -9,10 +9,15 @@ class DonePage extends StatefulWidget {
 
 class _DonePageState extends State<DonePage> {
   TodosManager todoManager = TodosManager();
-  List<TodoItem> _savedTodoItems = [];
+  List<TodoItem> _savedTodoItemsInDone = [];
 
   @override
   Widget build(BuildContext context) {
+    @override
+    void initState() {
+      super.initState();
+      _loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
+    }
     // var doneModel = [1]; //Provider.of<DoneModel>(context);
 /*
     // Sample data for testing
@@ -40,9 +45,9 @@ class _DonePageState extends State<DonePage> {
           ),
         ),
         child: ListView.builder(
-          itemCount: _savedTodoItems.length,
+          itemCount: _savedTodoItemsInDone.length,
           itemBuilder: (context, index) {
-            var doneItem = _savedTodoItems[index];
+            var doneItem = _savedTodoItemsInDone[index];
             return Card(
               color: Colors.white70, // Customize card color
               elevation: 5.0,
@@ -56,7 +61,7 @@ class _DonePageState extends State<DonePage> {
                   ),
                 ),
                 subtitle: Text(
-                  doneItem.description,
+                  doneItem.title,
                   style: const TextStyle(fontSize: 14.0),
                 ),
                 onTap: () {
@@ -75,14 +80,16 @@ class _DonePageState extends State<DonePage> {
     );
   }
 
-  void _loadTodos() async {
+  Future<void> _loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
-
       setState(() {
-        
+        for (TodoItem item in loadedTodos) {
+          if (item.isCrossed) {
+            _savedTodoItemsInDone.add(item);
+          }
+        }
       });
-      debugPrint(loadedTodos.toString());
     } catch (e) {
       print('Error loading todos: $e');
     }
