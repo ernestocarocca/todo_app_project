@@ -22,17 +22,7 @@ class _InProgressPageState extends State<InProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-    //   var inProgressModel = Provider.of<InProgressModel>(context);
-/*
-    // Sample data for testing
-    var sampleDatas = [
-      InProgressItem(title: 'titel', description: 'Description '),
-      InProgressItem(title: 'titel', description: 'Description '),
-      InProgressItem(title: 'titel', description: 'Description '),
-    ]; */
 
-    // Add sample data to the InProgressModel
-    //  inProgressModel.addInProgressItems(sampleDatas);
 
     return Scaffold(
       appBar: AppBar(

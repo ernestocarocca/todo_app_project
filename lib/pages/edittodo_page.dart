@@ -37,13 +37,6 @@ class _EditTodoPageState extends State<EditTodoPage> {
    TodosManager todoManager = TodosManager();
     List<TodoItem> todoList = [];
   
-  /*
-  
-  List<TodoItem> todoList = [
-    TodoItem(isCrossed: false, title: 'Task 1', description: 'Description 1'),
-    TodoItem(isCrossed: false, title: 'Task 2', description: 'Description 2'),
-    TodoItem(isCrossed: false, title: 'Task 3', description: 'Description 3'),
-  ]; */
 
   @override
   Widget build(BuildContext context) {
