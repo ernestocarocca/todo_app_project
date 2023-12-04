@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       const OverviewPage(),
-      const AddTodoPage(),
+      const AddTodoPage(capturedImagePath: '',),
       EditTodoPage(),
     ];
 

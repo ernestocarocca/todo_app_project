@@ -32,7 +32,7 @@ class OverviewPage extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => const AddTodoPage(),
+                builder: (BuildContext context) => const AddTodoPage(capturedImagePath: '',),
               ),
             );
           },
