@@ -3,33 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app_project/mobile_storage/camera_imagepicker.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
-
-//Ernesto: moved TodoItem class to Shae_pref file
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({Key? key, required this.capturedImagePath})
       : super(key: key);
-
   final String? capturedImagePath;
-
   @override
-  _AddTodoPageState createState() => _AddTodoPageState();
+  AddTodoPageState createState() => AddTodoPageState();
 }
 
-class _AddTodoPageState extends State<AddTodoPage> {
+class AddTodoPageState extends State<AddTodoPage> {
 //variable that saves the path to the image taken or choosen from gallery
   String? _selectedImagePath;
   String getImage = '';
-
   TodosManager todoManager = TodosManager();
-
   List<TodoItem> _savedTodoItems = [];
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<TodoTask> todoList = [];
-
   @override
   void initState() {
     super.initState();
@@ -78,9 +70,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 hintText: 'Enter title',
               ),
             ),
-            //  const SizedBox(height: 16.0),
             const Text('Description:'),
-
             TextField(
               controller: descriptionController,
               decoration: InputDecoration(
@@ -91,24 +81,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 ),
               ),
             ),
-
-            //shows the image by using the variable  _selectedImagePath where the path is stored to the choosen image
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 14.0),
             _selectedImagePath != null
                 ? Image.file(
                     File(_selectedImagePath!),
                     height: 150,
                     width: 150,
                   )
-                : SizedBox.shrink(),
-            const SizedBox(height: 20),
-            /*      Text(
-              _selectedImagePath != null
-                  ? 'Selected Image: $_selectedImagePath'
-                  : 'Please select an image',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),*/
-
+                : const SizedBox.shrink(),
             const SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
@@ -136,18 +116,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                 onPressed: () {
                   addNewTodo();
-
                   if (widget.capturedImagePath != null) {
                     print('Captured Image Path: ${widget.capturedImagePath}');
                   }
-
-                  //_saveTodos(_savedTodoItems);
                 },
                 child: const Text('Add Todo'),
               ),
@@ -161,8 +137,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
   void _loadTodos() async {
     try {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
-
-      //  debugPrint(loadedTodos[index].todoList.toString());
       setState(() {
         _savedTodoItems = loadedTodos;
       });
@@ -173,9 +147,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   void removeTodos() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-
-    // await todoManager.removeTodos(todo);
-
     setState(() {
       pref.setStringList('Todo', []);
       _savedTodoItems.clear();
@@ -185,17 +156,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   Future<void> addNewTodo() async {
     String todoTitle = titleController.text.trim();
-    // String newDescription = descriptionController.text.trim();
-
+    getImage = _selectedImagePath ?? "";
     TodoItem todoItem = TodoItem(
       title: todoTitle,
       todoList: List.from(todoList),
       isCrossed: false,
       image: getImage,
     );
-
     _savedTodoItems.add(todoItem);
-
     setState(() {
       print(_savedTodoItems);
       _saveTodos(List.from(_savedTodoItems));
@@ -223,9 +191,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     setState(() {
       _savedTodoItems[index].isCrossed = !_savedTodoItems[index].isCrossed;
     });
-  }
-
-// funktion to choose a image from gallery
+  } // funktion to choose a image from gallery
 
   Future _pickImageFromCamera() async {
     final returnedImage =
@@ -239,7 +205,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     // Spara den tagna bilden i galleriet
     GallerySaver.saveImage(returnedImage.path).then((bool? success) {
-      // getImage = _selectedImagePath!;
       if (success != null) {
         print('Bilden sparades i galleriet');
       } else {
@@ -258,18 +223,6 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     setState(() {
       _selectedImagePath = returnedImage.path;
-      getImage = returnedImage.path;
     });
   }
-/*
-// funktion to take a image
-  Future _pickImageFromCamera() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.camera);
-
-    if (returnedImage == null) return;
-    setState(() {
-      _selectedImagePath = returnedImage.path;
-    });
-  } */
 }
