@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/edittodo_page.dart';
+import 'package:todo_app_project/pages/show_one_done_page.dart';
 
 class DonePage extends StatefulWidget {
   @override
@@ -19,18 +20,6 @@ class _DonePageState extends State<DonePage> {
 
   @override
   Widget build(BuildContext context) {
-    // var doneModel = [1]; //Provider.of<DoneModel>(context);
-/*
-    // Sample data for testing
-    var sampleData = [
-      DoneItem(title: 'title', description: 'Description blal'),
-      DoneItem(title: 'title plugga', description: 'Description blalan'),
-      DoneItem(title: 'Completed hamster', description: 'Description ubcs'),
-    ]; */
-
-    // Add sample data to the DoneModel
-    //  doneModel.addDoneItems(sampleData);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Done Page'),
@@ -48,31 +37,35 @@ class _DonePageState extends State<DonePage> {
         child: ListView.builder(
           itemCount: _savedTodoItemsInDone.length,
           itemBuilder: (context, index) {
-            var doneItem = _savedTodoItemsInDone[index];
-            return Card(
-              color: Colors.white70, // Customize card color
-              elevation: 5.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListTile(
-                title: Text(
-                  doneItem.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
+            var doneTodoIndex = _savedTodoItemsInDone[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ShowOneDoneTodoPage(
+                      todoItem: doneTodoIndex,
+                    ),
+                  ),
+                );
+              },
+              child: Card(
+                color: Colors.white70, // Customize card color
+                elevation: 5.0,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  title: Text(
+                    doneTodoIndex.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  subtitle: Text(
+                    doneTodoIndex.title,
+                    style: const TextStyle(fontSize: 14.0),
                   ),
                 ),
-                subtitle: Text(
-                  doneItem.title,
-                  style: const TextStyle(fontSize: 14.0),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => EditTodoPage(),
-                    ),
-                  );
-                },
               ),
             );
           },

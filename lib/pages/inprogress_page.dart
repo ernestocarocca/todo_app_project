@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
+import 'package:todo_app_project/pages/one_progress_page.dart';
 import 'package:todo_app_project/pages/todomodel_page.dart';
 
 class InProgressPage extends StatefulWidget {
@@ -22,8 +23,6 @@ class _InProgressPageState extends State<InProgressPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('In Progress Page'),
@@ -42,37 +41,41 @@ class _InProgressPageState extends State<InProgressPage> {
           ),
         ),
         child: ListView.builder(
-          itemCount: _savedTodoItemsInProgres.length,
-          itemBuilder: (context, index) {
-            var inProgressTodo = _savedTodoItemsInProgres[index];
-            return Card(
-              color: Colors.white70, // Customize your card color
-              elevation: 5.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListTile(
-                title: Text(
-                  inProgressTodo.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                ),
-                subtitle: Text(
-                  inProgressTodo.title,
-                  style: const TextStyle(fontSize: 14.0),
-                ),
-                /*   onTap: () {
+            itemCount: _savedTodoItemsInProgres.length,
+            itemBuilder: (context, index) {
+              var inProgressTodoIndex = _savedTodoItemsInProgres[index];
+              return GestureDetector(
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => EditTodoPage(),
+                      builder: (BuildContext context) => OnePrgressPage(
+                        todoItem: inProgressTodoIndex,
+                        // Skicka hela todoItem-objektet
+                      ),
                     ),
                   );
-                },*/
-              ),
-            );
-          },
-        ),
+                },
+                child: Card(
+                  color: Colors.white70, // Customize your card color
+                  elevation: 5.0,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ListTile(
+                    title: Text(
+                      inProgressTodoIndex.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    subtitle: Text(
+                      inProgressTodoIndex.title,
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                  ),
+                ),
+              );
+            }),
       ),
     );
   }
