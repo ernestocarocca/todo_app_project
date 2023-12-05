@@ -94,8 +94,11 @@ class ToDoPageState extends State<ToDoPage> {
       print(loadedTodos);
       List<TodoItem> todosToShow = [];
       for (TodoItem i in loadedTodos) {
+
+        String t = i.image;
+        print( 'här printas imgage $t');
         setState(() {
-          imageTo.add(i.image);
+          imageTo.add(t);
         });
       }
 
