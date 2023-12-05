@@ -13,7 +13,8 @@ class ToDoPage extends StatefulWidget {
 class ToDoPageState extends State<ToDoPage> {
   TodosManager todoManager = TodosManager();
   List<TodoItem> _savedTodoItemsInTodoPage = [];
-
+  String imageTodo = "";
+  List<String> imageTo = [];
   @override
   void initState() {
     super.initState();
@@ -68,7 +69,8 @@ class ToDoPageState extends State<ToDoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => ToDoDetailsPage(
-                      todoItem: todoOnThisIdex,
+                      todoItem: todoOnThisIdex, image: imageTo[index],
+
                       // Skicka hela todoItem-objektet
                     ),
                   ),
@@ -91,18 +93,22 @@ class ToDoPageState extends State<ToDoPage> {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
       print(loadedTodos);
       List<TodoItem> todosToShow = [];
-      setState(() {
-        for (TodoItem todo in loadedTodos) {
-          List<TodoTask> tasks = todo.todoList;
-          List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
-          if (!isDoneList.contains(true)) {
-            todosToShow.add(todo);
-          }
-        }
+      for (TodoItem i in loadedTodos) {
         setState(() {
-          _savedTodoItemsInTodoPage = List.from(todosToShow);
-          todosToShow.clear();
+          imageTo.add(i.image);
         });
+      }
+
+      for (TodoItem todo in loadedTodos) {
+        List<TodoTask> tasks = todo.todoList;
+        List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
+        if (!isDoneList.contains(true)) {
+          todosToShow.add(todo);
+        }
+      }
+      setState(() {
+        _savedTodoItemsInTodoPage = List.from(todosToShow);
+        todosToShow.clear();
       });
     } catch (e) {
       print('Error loading todos: $e');
