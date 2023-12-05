@@ -239,7 +239,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     // Spara den tagna bilden i galleriet
     GallerySaver.saveImage(returnedImage.path).then((bool? success) {
-      getImage = _selectedImagePath ?? "";
+      // getImage = _selectedImagePath!;
       if (success != null) {
         print('Bilden sparades i galleriet');
       } else {
@@ -258,6 +258,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
     setState(() {
       _selectedImagePath = returnedImage.path;
+      getImage = returnedImage.path;
     });
   }
 /*
