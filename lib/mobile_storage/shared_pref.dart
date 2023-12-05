@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
-import 'dart:io';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoItem {
@@ -8,20 +8,20 @@ class TodoItem {
   String title;
   List<TodoTask> todoList; // Listan av uppgifter
   bool isCrossed;
-  // String description;
+  String image;
   static int counter = 0;
-  TodoItem({
-    required this.title,
-    required this.todoList,
-    required this.isCrossed,
-
-    //  required this.description,
-  }) : id = counter++;
+  TodoItem(
+      {required this.title,
+      required this.todoList,
+      required this.isCrossed,
+      required this.image})
+      : id = counter++;
   TodoItem.fromId(
       {required this.title,
       required this.todoList,
       required this.isCrossed,
-      required this.id});
+      required this.id,
+      required this.image});
 
   void addTask(String taskName, bool done) {
     todoList.add(TodoTask(taskName: taskName, isDone: done));
@@ -43,7 +43,7 @@ class TodoItem {
 
   @override
   String toString() {
-    return 'id:  $id ,title:  $title, todoList:  $todoList,  isCrossed:  $isCrossed';
+    return 'id:  $id ,title:  $title, todoList:  $todoList,  isCrossed:  $isCrossed,  image:  $image ';
   }
 
   Map<String, dynamic> toJson() {
@@ -52,21 +52,22 @@ class TodoItem {
       'title': title,
       'todoList': todoList.map((task) => task.toJson()).toList(),
       'isCrossed': isCrossed,
+      'image': image,
       // ' description': description
     };
   }
 
   factory TodoItem.fromJson(Map<String, dynamic> map) {
     return TodoItem.fromId(
-      id: map['id'],
-      title: map['title'],
-      todoList: (map['todoList'] as List<dynamic>)
-          .map((task) => TodoTask.fromJson(task))
-          .toList(), // Konvertera listan från dynamisk till en lista av strängar
-      isCrossed:
-          map['isCrossed'] as bool, // Ange att 'isCrossed' är av typen bool
-      //   description: map['description'],
-    );
+        id: map['id'],
+        title: map['title'],
+        todoList: (map['todoList'] as List<dynamic>)
+            .map((task) => TodoTask.fromJson(task))
+            .toList(), // Konvertera listan från dynamisk till en lista av strängar
+        isCrossed: map['isCrossed'] as bool,
+        image: map['image'] // Ange att 'isCrossed' är av typen bool
+        //   description: map['description'],
+        );
   }
 }
 
@@ -107,11 +108,11 @@ class TodosManager {
 
   Future<void> addTodoList(List<TodoItem> todoList) async {
     //List<String> todos = _prefs.getStringList(_keyTodo) ?? [];
-List<String> temp = [];
+    List<String> temp = [];
     for (TodoItem todo in todoList) {
       final encodedTodo = json.encode(todo.toJson());
-temp.add(encodedTodo);
-    // todos.add(encodedTodo);
+      temp.add(encodedTodo);
+      // todos.add(encodedTodo);
     }
 
     await _prefs.setStringList(_keyTodo, temp);
