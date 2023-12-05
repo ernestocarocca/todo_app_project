@@ -39,23 +39,14 @@ class ToDoPageState extends State<ToDoPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => const AddTodoPage(),
+                    builder: (BuildContext context) => const AddTodoPage(
+                      capturedImagePath: '',
+                    ),
                   ),
                 );
               },
             ),
-
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const AddTodoPage(capturedImagePath: '',),
-                ),
-              );
-            },
           ),
-
-          )
         ],
       ),
       body: Container(
@@ -120,6 +111,5 @@ class ToDoPageState extends State<ToDoPage> {
 
   void removeTodos(List<TodoItem> todo) async {
     await todoManager.removeTodos(todo);
-
   }
 }
