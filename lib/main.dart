@@ -6,14 +6,6 @@ import 'package:todo_app_project/pages/edittodo_page.dart';
 
 Future<void> main() async {
   runApp(
-    /* MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ToDoModel()),
-        ChangeNotifierProvider(create: (context) => InProgressModel()),
-        ChangeNotifierProvider(create: (context) => DoneModel()),
-      ], 
-      child: const MyApp(),
-    ),*/
     const MyApp(),
   );
 }
@@ -28,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: MyHomePage(
+      home: const MyHomePage(
         title: 'main',
       ),
     );
@@ -64,7 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     List<Widget> pages = [
       const OverviewPage(),
-      const AddTodoPage(capturedImagePath: '',),
+      const AddTodoPage(
+        capturedImagePath: '',
+      ),
       EditTodoPage(),
     ];
 

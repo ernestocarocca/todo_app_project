@@ -8,10 +8,10 @@ class OverviewPage extends StatefulWidget {
   const OverviewPage({Key? key}) : super(key: key);
 
   @override
-  _OverviewPageState createState() => _OverviewPageState();
+  OverviewPageState createState() => OverviewPageState();
 }
 
-class _OverviewPageState extends State<OverviewPage> {
+class OverviewPageState extends State<OverviewPage> {
   double _fontSize = 18;
 
   @override
@@ -27,7 +27,7 @@ class _OverviewPageState extends State<OverviewPage> {
           _buildButton(context, 'ToDo', Icons.checklist, const ToDoPage()),
           _buildButton(
               context, 'In Progress', Icons.hourglass_bottom, const InProgressPage()),
-          _buildButton(context, 'Done', Icons.check_circle, DonePage()),
+          _buildButton(context, 'Done', Icons.check_circle, const DonePage()),
           const SizedBox(
             height: 10,
           ),

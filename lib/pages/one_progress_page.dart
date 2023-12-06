@@ -10,14 +10,14 @@ class OnePrgressPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _OnePrgressPageState createState() => _OnePrgressPageState();
+  OnePrgressPageState createState() => OnePrgressPageState();
 }
 
-class _OnePrgressPageState extends State<OnePrgressPage> {
+class OnePrgressPageState extends State<OnePrgressPage> {
 
   TodosManager todosManager = TodosManager();
 
-  List<TodoItem> _saveTodoListInOnePage = [];
+
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _OnePrgressPageState extends State<OnePrgressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ToDo Details'),
+        title: const Text('ToDo Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,9 +39,9 @@ class _OnePrgressPageState extends State<OnePrgressPage> {
           children: [
             Text(
               'Title: ${widget.todoItem.title}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               'Status: ${widget.todoItem.isCrossed ? 'Completed' : 'Incomplete'}',
               style: TextStyle(
@@ -93,7 +93,7 @@ class _OnePrgressPageState extends State<OnePrgressPage> {
   }
 
 
-  Future<void> _saveTodos(List<TodoItem> todoItems) async {
+  Future<void> saveTodos(List<TodoItem> todoItems) async {
     await todosManager.addTodoList(todoItems);
   }
 

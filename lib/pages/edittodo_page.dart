@@ -28,11 +28,13 @@ class MyApp extends StatelessWidget {
 }
 */
 class EditTodoPage extends StatefulWidget {
+  const EditTodoPage({super.key});
+
   @override
-  _EditTodoPageState createState() => _EditTodoPageState();
+  EditTodoPageState createState() => EditTodoPageState();
 }
 
-class _EditTodoPageState extends State<EditTodoPage> {
+class EditTodoPageState extends State<EditTodoPage> {
 
    TodosManager todoManager = TodosManager();
     List<TodoItem> todoList = [];
@@ -91,7 +93,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
                         color: todoList[index].isCrossed ? Colors.green : null,
                       ),
                     ),
-                    SizedBox(width: 8.0),
+                    const SizedBox(width: 8.0),
                     GestureDetector(
                       onTap: () {
                         _confirmDelete(index);
@@ -130,13 +132,13 @@ class _EditTodoPageState extends State<EditTodoPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(textController.text);
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -165,20 +167,20 @@ class _EditTodoPageState extends State<EditTodoPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this item?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this item?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );

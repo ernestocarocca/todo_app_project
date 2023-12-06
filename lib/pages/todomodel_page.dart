@@ -67,6 +67,5 @@ class DoneModel extends ChangeNotifier {
 
   void addDoneItems(List<DoneItem> doneItems) {
     _doneList.addAll(doneItems);
-    //notifyListeners(); Ernesto: notifyListeners() i addDoneItems  gör så appen krashar måste hanteras
   }
 }

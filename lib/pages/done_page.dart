@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
-import 'package:todo_app_project/pages/edittodo_page.dart';
+
 import 'package:todo_app_project/pages/show_one_done_page.dart';
 
 class DonePage extends StatefulWidget {
+  const DonePage({super.key});
+
   @override
-  _DonePageState createState() => _DonePageState();
+  DonePageState createState() => DonePageState();
 }
 
-class _DonePageState extends State<DonePage> {
+class DonePageState extends State<DonePage> {
   TodosManager todoManager = TodosManager();
   List<TodoItem> _savedTodoItemsInDone = [];
 
@@ -17,8 +19,7 @@ class _DonePageState extends State<DonePage> {
     super.initState();
     loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
   }
-
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
