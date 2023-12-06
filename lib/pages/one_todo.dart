@@ -58,7 +58,7 @@ class ToDoDetailsPageState extends State<ToDoDetailsPage> {
                     height: 90,
                     width: 90,
                   )
-                :  SizedBox(
+                :  const SizedBox(
                     height: 90.0,
                     width: 90.0,
                     child: Icon(Icons.image_aspect_ratio)),

@@ -213,7 +213,7 @@ class AddTodoPageState extends State<AddTodoPage> {
       print('här skriv path ut när man addar $_selectedImagePath');
     });
 
-    // Spara den tagna bilden i galleriet
+ 
     GallerySaver.saveImage(returnedImage.path).then((bool? success) {
       if (success != null) {
         print('Bilden sparades i galleriet');
@@ -221,7 +221,7 @@ class AddTodoPageState extends State<AddTodoPage> {
         print('Det uppstod ett fel vid sparandet av bilden i galleriet');
       }
 
-      // Spara den tagna bilden i galleriet
+  
     });
   }
 

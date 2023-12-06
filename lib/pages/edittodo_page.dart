@@ -1,32 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
-/*
-void main() {
-  runApp(MyApp());
-}
 
-class TodoItem {
-  bool isCrossed;
-  String title;
-  String description;
-
-  TodoItem(
-      {required this.isCrossed,
-      required this.title,
-      required this.description});
-} 
-
-class MyApp extends StatelessWidget {
-
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: EditTodoPage(),
-    );
-  }
-}
-*/
 class EditTodoPage extends StatefulWidget {
   const EditTodoPage({super.key});
 
@@ -187,7 +161,7 @@ class EditTodoPageState extends State<EditTodoPage> {
       },
     );
 
-    if (shouldDelete != null && shouldDelete) {
+    if (shouldDelete != null ) {
       setState(() {
         todoList.removeAt(index);
       });

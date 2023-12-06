@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       const AddTodoPage(
         capturedImagePath: '',
       ),
-      EditTodoPage(),
+      const EditTodoPage(),
     ];
 
     return Scaffold(
