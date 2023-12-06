@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_project/pages/addtodo_page.dart';
 import 'package:todo_app_project/pages/todo_page.dart';
 import 'package:todo_app_project/pages/inprogress_page.dart';
 import 'package:todo_app_project/pages/done_page.dart';
 
-
-class OverviewPage extends StatelessWidget {
+class OverviewPage extends StatefulWidget {
   const OverviewPage({Key? key}) : super(key: key);
+
+  @override
+  OverviewPageState createState() => OverviewPageState();
+}
+
+class OverviewPageState extends State<OverviewPage> {
+  double _fontSize = 18;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Overview Page'),
+        centerTitle: true,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -20,8 +28,42 @@ class OverviewPage extends StatelessWidget {
           _buildButton(
               context, 'In Progress', Icons.hourglass_bottom, const InProgressPage()),
           _buildButton(context, 'Done', Icons.check_circle, const DonePage()),
+          const SizedBox(
+            height: 10,
+          ),
+          Slider(
+            value: _fontSize,
+            min: 10,
+            max: 30,
+            onChanged: (double value) {
+              setState(() {
+                _fontSize = value;
+              });
+            },
+          ),
         ],
       ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 20.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const AddTodoPage(capturedImagePath: ''),
+              ),
+            );
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.blue,
+          elevation: 0,
+          child: const Icon(
+            Icons.post_add,
+            size: 60,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
@@ -59,7 +101,7 @@ class OverviewPage extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: _fontSize, fontWeight: FontWeight.bold),
               ),
             ],
           ),

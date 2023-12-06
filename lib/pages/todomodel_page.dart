@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 
-
-class ToDoItem {
+class ToDoItemModel {
   final String title;
   final String description;
   final String imageUrl;
 
-  ToDoItem({required this.title, required this.description, required this.imageUrl});
+  ToDoItemModel(
+      {required this.title, required this.description, required this.imageUrl});
 }
 
 class ToDoModel extends ChangeNotifier {
-  final List<ToDoItem> _toDoList = [];
+  final List<ToDoItemModel> _toDoList = [];
 
-  List<ToDoItem> get toDoList => _toDoList;
+  List<ToDoItemModel> get toDoList => _toDoList;
 
-  void addTodoItem(ToDoItem todoItem) {
+  void addTodoItem(ToDoItemModel todoItem) {
     _toDoList.add(todoItem);
-    notifyListeners();
+    // notifyListeners();
   }
 
-  void addTodoItems(List<ToDoItem> todoItems) {
+  void addTodoItems(List<ToDoItemModel> todoItems) {
     _toDoList.addAll(todoItems);
-    notifyListeners();
+    //notifyListeners();
   }
 }
-
-
-
 
 class InProgressItem {
   final String title;
@@ -42,15 +39,14 @@ class InProgressModel extends ChangeNotifier {
 
   void addTodoItem(InProgressItem inprogressItem) {
     _inProgressList.add(inprogressItem);
-    notifyListeners();
+    //   notifyListeners();
   }
 
   void addInProgressItems(List<InProgressItem> inprogressItems) {
     _inProgressList.addAll(inprogressItems);
-    notifyListeners();
+    // notifyListeners(); Ernesto: gör så appen krashar måste hanteras
   }
 }
-
 
 class DoneItem {
   final String title;
@@ -71,7 +67,5 @@ class DoneModel extends ChangeNotifier {
 
   void addDoneItems(List<DoneItem> doneItems) {
     _doneList.addAll(doneItems);
-    notifyListeners();
   }
 }
-

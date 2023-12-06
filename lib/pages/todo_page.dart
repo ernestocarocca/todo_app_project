@@ -1,40 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app_project/pages/edittodo_page.dart';
-import 'package:todo_app_project/pages/todomodel_page.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
+import 'package:todo_app_project/pages/addtodo_page.dart';
+import 'package:todo_app_project/pages/one_todo.dart';
 
-class ToDoPage extends StatelessWidget {
+class ToDoPage extends StatefulWidget {
   const ToDoPage({Key? key}) : super(key: key);
 
   @override
+  ToDoPageState createState() => ToDoPageState();
+}
+
+class ToDoPageState extends State<ToDoPage> {
+  TodosManager todoManager = TodosManager();
+  List<TodoItem> _savedTodoItemsInTodoPage = [];
+  String imageTodo = "";
+  List<String> imageTo = [];
+  @override
+  void initState() {
+    super.initState();
+    loadTodos(); // Ernesto: Load tasks from SharedPreferences when the page initializes.
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var toDoModel = Provider.of<ToDoModel>(context);
-
-    // Sample data for testing
-    var sampleData = [
-      ToDoItem(
-          title: 'Handla',
-          description: 'mjölk',
-          imageUrl: ('images/testimage.jpg')),
-        
-      ToDoItem(
-          title: 'träna',
-          description: 'knäböj',
-          imageUrl:
-              'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
-      ToDoItem(
-          title: 'städa',
-          description: 'sopa',
-          imageUrl:
-              'https://lomma.se/images/18.1f169aa2173042d75c4cfd65/1594737211499/hund%20-%20puff.jpg'),
-    ];
-
-    // Add sample data to the ToDoModel
-    toDoModel.addTodoItems(sampleData);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo Page'),
+        centerTitle: true,
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.post_add,
+                size: 38,
+                color: Colors.blue,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const AddTodoPage(
+                      capturedImagePath: '',
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -46,38 +60,25 @@ class ToDoPage extends StatelessWidget {
           ),
         ),
         child: ListView.builder(
-          itemCount: toDoModel.toDoList.length,
+          itemCount: _savedTodoItemsInTodoPage.length,
           itemBuilder: (context, index) {
-            var todoItem = toDoModel.toDoList[index];
-            return Card(
-              color: Colors.white70, // Customize card color
-              elevation: 5.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ListTile(
-                title: Text(
-                  todoItem.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
+            TodoItem todoOnThisIdex = _savedTodoItemsInTodoPage[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ToDoDetailsPage(
+                        todoItem: todoOnThisIdex, image: imageTo[index]
+
+                        // Skicka hela todoItem-objektet
+                        ),
                   ),
-                ),
-                subtitle: Text(
-                  todoItem.description,
-                  style: const TextStyle(fontSize: 14.0),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) =>  EditTodoPage(),
-                    ),
-                  );
-                },
-                leading: Image.network(
-                  todoItem.imageUrl,
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
+                );
+              },
+              child: Card(
+                child: ListTile(
+                  title: Text(todoOnThisIdex.title),
                 ),
               ),
             );
@@ -85,5 +86,40 @@ class ToDoPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void loadTodos() async {
+    try {
+      List<TodoItem> loadedTodos = await todoManager.getTodos();
+      print(loadedTodos);
+      List<TodoItem> todosToShow = [];
+
+      for (TodoItem i in loadedTodos) {
+        String t = i.image;
+
+        print('här printas imgage $t');
+        setState(() {
+          imageTo.add(t);
+        });
+      }
+
+      for (TodoItem todo in loadedTodos) {
+        List<TodoTask> tasks = todo.todoList;
+        List<bool> isDoneList = tasks.map((task) => task.isDone).toList();
+        if (!isDoneList.contains(true)) {
+          todosToShow.add(todo);
+        }
+      }
+      setState(() {
+        _savedTodoItemsInTodoPage = List.from(todosToShow);
+        todosToShow.clear();
+      });
+    } catch (e) {
+      print('Error loading todos: $e');
+    }
+  }
+
+  void removeTodos(List<TodoItem> todo) async {
+    await todoManager.removeTodos(todo);
   }
 }

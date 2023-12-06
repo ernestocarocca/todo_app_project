@@ -1,45 +1,23 @@
 import 'package:flutter/material.dart';
-
-
-void main() {
-  runApp(MyApp());
-}
-
-class TodoItem {
-  bool isCrossed;
-  String title;
-  String description;
-
-  TodoItem({required this.isCrossed, required this.title, required this.description});
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: EditTodoPage(),
-    );
-  }
-}
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 class EditTodoPage extends StatefulWidget {
+  const EditTodoPage({super.key});
+
   @override
-  _EditTodoPageState createState() => _EditTodoPageState();
+  EditTodoPageState createState() => EditTodoPageState();
 }
 
-class _EditTodoPageState extends State<EditTodoPage> {
-  List<TodoItem> todoList = [
-    TodoItem(isCrossed: false, title: 'Task 1', description: 'Description 1'),
-    TodoItem(isCrossed: false, title: 'Task 2', description: 'Description 2'),
-    TodoItem(isCrossed: false, title: 'Task 3', description: 'Description 3'),
-  ];
+class EditTodoPageState extends State<EditTodoPage> {
 
+   TodosManager todoManager = TodosManager();
+    List<TodoItem> todoList = [];
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         title: Text('Edit Todo Page'),
       ),
       body: Padding(
@@ -56,7 +34,9 @@ class _EditTodoPageState extends State<EditTodoPage> {
                   child: Text(
                     todoList[index].title,
                     style: TextStyle(
-                      decoration: todoList[index].isCrossed ? TextDecoration.lineThrough : null,
+                      decoration: todoList[index].isCrossed
+                          ? TextDecoration.lineThrough
+                          : null,
                     ),
                   ),
                 ),
@@ -65,9 +45,11 @@ class _EditTodoPageState extends State<EditTodoPage> {
                     _editTodo(index, isTitle: false);
                   },
                   child: Text(
-                    todoList[index].description,
+                    todoList[index].title,
                     style: TextStyle(
-                      decoration: todoList[index].isCrossed ? TextDecoration.lineThrough : null,
+                      decoration: todoList[index].isCrossed
+                          ? TextDecoration.lineThrough
+                          : null,
                     ),
                   ),
                 ),
@@ -85,12 +67,12 @@ class _EditTodoPageState extends State<EditTodoPage> {
                         color: todoList[index].isCrossed ? Colors.green : null,
                       ),
                     ),
-                    SizedBox(width: 8.0),
+                    const SizedBox(width: 8.0),
                     GestureDetector(
                       onTap: () {
                         _confirmDelete(index);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.delete,
                         color: Colors.red,
                       ),
@@ -106,9 +88,11 @@ class _EditTodoPageState extends State<EditTodoPage> {
   }
 
   void _editTodo(int index, {required bool isTitle}) async {
-    String currentValue = isTitle ? todoList[index].title : todoList[index].description;
-    TextEditingController textController = TextEditingController(text: currentValue);
-
+    String currentValue =
+        isTitle ? todoList[index].title : todoList[index].title;
+    TextEditingController textController =
+        TextEditingController(text: currentValue);
+// Ernesto catch if String value is not empty (null)
     String newValue = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -122,13 +106,13 @@ class _EditTodoPageState extends State<EditTodoPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(textController.text);
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -140,7 +124,7 @@ class _EditTodoPageState extends State<EditTodoPage> {
         if (isTitle) {
           todoList[index].title = newValue;
         } else {
-          todoList[index].description = newValue;
+          todoList[index].title = newValue;
         }
       });
     }
@@ -157,31 +141,30 @@ class _EditTodoPageState extends State<EditTodoPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this item?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this item?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
       },
     );
 
-    if (shouldDelete != null && shouldDelete) {
+    if (shouldDelete != null ) {
       setState(() {
         todoList.removeAt(index);
       });
     }
   }
 }
-
