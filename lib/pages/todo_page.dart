@@ -69,10 +69,10 @@ class ToDoPageState extends State<ToDoPage> {
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => ToDoDetailsPage(
-                      todoItem: todoOnThisIdex, image: imageTo[index],
+                        todoItem: todoOnThisIdex, image: imageTo[index]
 
-                      // Skicka hela todoItem-objektet
-                    ),
+                        // Skicka hela todoItem-objektet
+                        ),
                   ),
                 );
               },
@@ -93,8 +93,10 @@ class ToDoPageState extends State<ToDoPage> {
       List<TodoItem> loadedTodos = await todoManager.getTodos();
       print(loadedTodos);
       List<TodoItem> todosToShow = [];
+
       for (TodoItem i in loadedTodos) {
         String t = i.image;
+
         print('här printas imgage $t');
         setState(() {
           imageTo.add(t);

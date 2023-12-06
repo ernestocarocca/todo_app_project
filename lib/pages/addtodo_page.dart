@@ -1,8 +1,12 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 class AddTodoPage extends StatefulWidget {
@@ -22,6 +26,7 @@ class AddTodoPageState extends State<AddTodoPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   List<TodoTask> todoList = [];
+  late XFile imageFile;
   @override
   void initState() {
     super.initState();
@@ -122,7 +127,7 @@ class AddTodoPageState extends State<AddTodoPage> {
                 onPressed: () {
                   addNewTodo();
                   if (widget.capturedImagePath != null) {
-                    print('Captured Image Path: ${widget.capturedImagePath}');
+                    //    print('Captured Image Path: ${widget.capturedImagePath}');
                   }
                 },
                 child: const Text('Add Todo'),
@@ -157,6 +162,8 @@ class AddTodoPageState extends State<AddTodoPage> {
   Future<void> addNewTodo() async {
     String todoTitle = titleController.text.trim();
     getImage = _selectedImagePath ?? "";
+    getlocalfile(getImage);
+
     TodoItem todoItem = TodoItem(
       title: todoTitle,
       todoList: List.from(todoList),
@@ -191,7 +198,9 @@ class AddTodoPageState extends State<AddTodoPage> {
     setState(() {
       _savedTodoItems[index].isCrossed = !_savedTodoItems[index].isCrossed;
     });
-  } // funktion to choose a image from gallery
+  }
+
+  // funktion to choose a image from gallery
 
   Future _pickImageFromCamera() async {
     final returnedImage =
@@ -201,6 +210,7 @@ class AddTodoPageState extends State<AddTodoPage> {
 
     setState(() {
       _selectedImagePath = returnedImage.path;
+      print('här skriv path ut när man addar $_selectedImagePath');
     });
 
     // Spara den tagna bilden i galleriet
@@ -213,6 +223,12 @@ class AddTodoPageState extends State<AddTodoPage> {
 
       // Spara den tagna bilden i galleriet
     });
+  }
+
+  Future<File> getlocalfile(String pathFile) async {
+    final root = await getApplicationDocumentsDirectory();
+    final path = join(root.path, pathFile);
+    return File(path).create(recursive: true);
   }
 
   Future _pickImageFromGallery() async {

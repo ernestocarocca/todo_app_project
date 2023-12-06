@@ -14,7 +14,6 @@ class ToDoDetailsPage extends StatefulWidget {
     required this.todoItem,
     required this.image,
   }) : super(key: key);
-   
 
   @override
   ToDoDetailsPageState createState() => ToDoDetailsPageState();
@@ -22,8 +21,6 @@ class ToDoDetailsPage extends StatefulWidget {
 
 class ToDoDetailsPageState extends State<ToDoDetailsPage> {
   TodosManager todosManager = TodosManager();
-
-
 
   @override
   void initState() {
@@ -54,15 +51,17 @@ class ToDoDetailsPageState extends State<ToDoDetailsPage> {
               ),
             ),
             const SizedBox(height: 16.0),
-            widget.image !=null ? 
-                 Image.file(
+            
+            widget.image != null
+                ? Image.file(
                     File(widget.image),
-                    height: 150,
-                    width: 150,
+                    height: 90,
+                    width: 90,
                   )
-                : const SizedBox.shrink(),
-            const SizedBox(height: 20),
-            const SizedBox(height: 8.0),
+                :  SizedBox(
+                    height: 90.0,
+                    width: 90.0,
+                    child: Icon(Icons.image_aspect_ratio)),
             ListView.builder(
               shrinkWrap: true,
               itemCount: widget.todoItem.todoList.length,
