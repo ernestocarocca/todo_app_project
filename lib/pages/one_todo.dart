@@ -1,22 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
+// ignore: must_be_immutable
 class ToDoDetailsPage extends StatefulWidget {
   final TodoItem todoItem;
   String image;
-  ToDoDetailsPage({Key? key, required this.todoItem, required this.image})
-      : super(key: key);
+  ToDoDetailsPage({
+    Key? key,
+    required this.todoItem,
+    required this.image,
+  }) : super(key: key);
 
   @override
-  _ToDoDetailsPageState createState() => _ToDoDetailsPageState();
+  ToDoDetailsPageState createState() => ToDoDetailsPageState();
 }
 
-class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
+class ToDoDetailsPageState extends State<ToDoDetailsPage> {
   TodosManager todosManager = TodosManager();
-
-  List<TodoItem> _saveTodoListInOnePage = [];
 
   @override
   void initState() {
@@ -28,7 +32,7 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ToDo Details'),
+        title: const Text('ToDo Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -37,9 +41,9 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
           children: [
             Text(
               'Title: ${widget.todoItem.title}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               'Status: ${widget.todoItem.isCrossed ? 'Completed' : 'Incomplete'}',
               style: TextStyle(
@@ -47,15 +51,17 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
               ),
             ),
             const SizedBox(height: 16.0),
+            
             widget.image != null
                 ? Image.file(
                     File(widget.image),
-                    height: 150,
-                    width: 150,
+                    height: 90,
+                    width: 90,
                   )
-                : SizedBox.shrink(),
-            const SizedBox(height: 20),
-            const SizedBox(height: 8.0),
+                :  const SizedBox(
+                    height: 90.0,
+                    width: 90.0,
+                    child: Icon(Icons.image_aspect_ratio)),
             ListView.builder(
               shrinkWrap: true,
               itemCount: widget.todoItem.todoList.length,
@@ -96,7 +102,7 @@ class _ToDoDetailsPageState extends State<ToDoDetailsPage> {
     );
   }
 
-  Future<void> _saveTodos(List<TodoItem> todoItems) async {
+  Future<void> saveTodos(List<TodoItem> todoItems) async {
     await todosManager.addTodoList(todoItems);
   }
 

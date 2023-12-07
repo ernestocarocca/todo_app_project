@@ -6,10 +6,10 @@ class InProgressPage extends StatefulWidget {
   const InProgressPage({Key? key}) : super(key: key);
 
   @override
-  _InProgressPageState createState() => _InProgressPageState();
+  InProgressPageState createState() => InProgressPageState();
 }
 
-class _InProgressPageState extends State<InProgressPage> {
+class InProgressPageState extends State<InProgressPage> {
   TodosManager todoManager = TodosManager();
   List<TodoItem> _savedTodoItemsInProgres = [];
 

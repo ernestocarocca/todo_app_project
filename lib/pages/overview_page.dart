@@ -10,14 +10,14 @@ class OverviewPage extends StatefulWidget {
   const OverviewPage({Key? key}) : super(key: key);
 
   @override
-  _OverviewPageState createState() => _OverviewPageState();
+  OverviewPageState createState() => OverviewPageState();
 }
+
 
 // The state class for the Overview Page
 class _OverviewPageState extends State<OverviewPage> {
-
-  // Variable to control the font size of text
-  double _fontSize = 18;
+  
+  double _fontSize = 18; // Variable to control the font size of text
 
   @override
   Widget build(BuildContext context) {

@@ -10,12 +10,11 @@ class ShowOneDoneTodoPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ShowOneDoneTodoPageState createState() => _ShowOneDoneTodoPageState();
+  ShowOneDoneTodoPageState createState() => ShowOneDoneTodoPageState();
 }
 
-class _ShowOneDoneTodoPageState extends State<ShowOneDoneTodoPage> {
+class ShowOneDoneTodoPageState extends State<ShowOneDoneTodoPage> {
   TodosManager todosManager = TodosManager();
-
 
   @override
   void initState() {
@@ -27,7 +26,7 @@ class _ShowOneDoneTodoPageState extends State<ShowOneDoneTodoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ToDo Details'),
+        title: const Text('ToDo Details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -36,9 +35,9 @@ class _ShowOneDoneTodoPageState extends State<ShowOneDoneTodoPage> {
           children: [
             Text(
               'Title: ${widget.todoItem.title}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               'Status: ${widget.todoItem.isCrossed ? 'Completed' : 'Incomplete'}',
               style: TextStyle(
