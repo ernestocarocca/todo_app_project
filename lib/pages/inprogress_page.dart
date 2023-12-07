@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/one_progress_page.dart';
-import 'package:todo_app_project/pages/todomodel_page.dart';
 
 class InProgressPage extends StatefulWidget {
   const InProgressPage({Key? key}) : super(key: key);
@@ -30,7 +28,7 @@ class _InProgressPageState extends State<InProgressPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        decoration: const BoxDecoration(
+        decoration: const BoxDecoration(  //background
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

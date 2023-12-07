@@ -4,6 +4,8 @@ import 'package:todo_app_project/pages/todo_page.dart';
 import 'package:todo_app_project/pages/inprogress_page.dart';
 import 'package:todo_app_project/pages/done_page.dart';
 
+
+// The main class representing the Overview Page
 class OverviewPage extends StatefulWidget {
   const OverviewPage({Key? key}) : super(key: key);
 
@@ -11,11 +13,15 @@ class OverviewPage extends StatefulWidget {
   _OverviewPageState createState() => _OverviewPageState();
 }
 
+// The state class for the Overview Page
 class _OverviewPageState extends State<OverviewPage> {
+
+  // Variable to control the font size of text
   double _fontSize = 18;
 
   @override
   Widget build(BuildContext context) {
+    // App bar at the top of the screen
     return Scaffold(
       appBar: AppBar(
         title: const Text('Overview Page'),
@@ -24,10 +30,13 @@ class _OverviewPageState extends State<OverviewPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Button to navigate to ToDo Page
           _buildButton(context, 'ToDo', Icons.checklist, const ToDoPage()),
-          _buildButton(
-              context, 'In Progress', Icons.hourglass_bottom, const InProgressPage()),
+          // Button to navigate to In Progress Page
+          _buildButton(context, 'In Progress', Icons.hourglass_bottom, const InProgressPage()),
+          // Button to navigate to Done Page
           _buildButton(context, 'Done', Icons.check_circle, DonePage()),
+
           const SizedBox(
             height: 10,
           ),
@@ -43,6 +52,8 @@ class _OverviewPageState extends State<OverviewPage> {
           ),
         ],
       ),
+
+      // Floating Action Button for adding new todos navigates to addtodopage
       floatingActionButton: Container(
         margin: const EdgeInsets.only(bottom: 20.0),
         child: FloatingActionButton(
@@ -67,6 +78,7 @@ class _OverviewPageState extends State<OverviewPage> {
     );
   }
 
+  // Function to build buttons used for navigation
   Widget _buildButton(
       BuildContext context, String title, IconData icon, Widget destination) {
     return Padding(

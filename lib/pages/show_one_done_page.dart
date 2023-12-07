@@ -16,7 +16,6 @@ class ShowOneDoneTodoPage extends StatefulWidget {
 class _ShowOneDoneTodoPageState extends State<ShowOneDoneTodoPage> {
   TodosManager todosManager = TodosManager();
 
-  List<TodoItem> _saveTodoListInOnePage = [];
 
   @override
   void initState() {

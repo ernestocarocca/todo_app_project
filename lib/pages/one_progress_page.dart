@@ -17,7 +17,6 @@ class _OnePrgressPageState extends State<OnePrgressPage> {
 
   TodosManager todosManager = TodosManager();
 
-  List<TodoItem> _saveTodoListInOnePage = [];
 
   @override
   void initState() {

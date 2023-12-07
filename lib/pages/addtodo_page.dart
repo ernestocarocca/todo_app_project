@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app_project/mobile_storage/camera_imagepicker.dart';
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
 //Ernesto: moved TodoItem class to Shae_pref file
@@ -92,7 +91,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
               ),
             ),
 
-            //shows the image by using the variable  _selectedImagePath where the path is stored to the choosen image
+            // Display the selected image
             const SizedBox(height: 16.0),
             _selectedImagePath != null
                 ? Image.file(
@@ -102,12 +101,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                   )
                 : SizedBox.shrink(),
             const SizedBox(height: 20),
-            /*      Text(
-              _selectedImagePath != null
-                  ? 'Selected Image: $_selectedImagePath'
-                  : 'Please select an image',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),*/
+         
 
             const SizedBox(height: 16.0),
             Expanded(
@@ -237,7 +231,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
       _selectedImagePath = returnedImage.path;
     });
 
-    // Spara den tagna bilden i galleriet
+    // saves the the image taken in to gallery
     GallerySaver.saveImage(returnedImage.path).then((bool? success) {
       // getImage = _selectedImagePath!;
       if (success != null) {
@@ -245,11 +239,10 @@ class _AddTodoPageState extends State<AddTodoPage> {
       } else {
         print('Det uppstod ett fel vid sparandet av bilden i galleriet');
       }
-
-      // Spara den tagna bilden i galleriet
     });
   }
 
+//// Function to choose an image from the gallery
   Future _pickImageFromGallery() async {
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -261,15 +254,5 @@ class _AddTodoPageState extends State<AddTodoPage> {
       getImage = returnedImage.path;
     });
   }
-/*
-// funktion to take a image
-  Future _pickImageFromCamera() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.camera);
 
-    if (returnedImage == null) return;
-    setState(() {
-      _selectedImagePath = returnedImage.path;
-    });
-  } */
 }
