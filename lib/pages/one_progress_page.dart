@@ -18,7 +18,6 @@ class OnePrgressPageState extends State<OnePrgressPage> {
   TodosManager todosManager = TodosManager();
 
 
-
   @override
   void initState() {
     super.initState();

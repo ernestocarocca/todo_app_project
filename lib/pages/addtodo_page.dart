@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_app_project/mobile_storage/shared_pref.dart';
+
 
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 
@@ -86,14 +88,20 @@ class AddTodoPageState extends State<AddTodoPage> {
                 ),
               ),
             ),
+
+
+            // Display the selected image
             const SizedBox(height: 14.0),
+
             _selectedImagePath != null
                 ? Image.file(
                     File(_selectedImagePath!),
                     height: 150,
                     width: 150,
                   )
+
                 : const SizedBox.shrink(),
+
             const SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
@@ -213,7 +221,8 @@ class AddTodoPageState extends State<AddTodoPage> {
       print('här skriv path ut när man addar $_selectedImagePath');
     });
 
- 
+
+    // saves the the image taken in to gallery
     GallerySaver.saveImage(returnedImage.path).then((bool? success) {
       if (success != null) {
         print('Bilden sparades i galleriet');
@@ -221,10 +230,10 @@ class AddTodoPageState extends State<AddTodoPage> {
         print('Det uppstod ett fel vid sparandet av bilden i galleriet');
       }
 
-  
     });
   }
 
+// Function to choose an image from the gallery
   Future<File> getlocalfile(String pathFile) async {
     final root = await getApplicationDocumentsDirectory();
     final path = join(root.path, pathFile);
@@ -241,4 +250,5 @@ class AddTodoPageState extends State<AddTodoPage> {
       _selectedImagePath = returnedImage.path;
     });
   }
+
 }

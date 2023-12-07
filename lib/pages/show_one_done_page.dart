@@ -15,6 +15,7 @@ class ShowOneDoneTodoPage extends StatefulWidget {
 
 class ShowOneDoneTodoPageState extends State<ShowOneDoneTodoPage> {
   TodosManager todosManager = TodosManager();
+
   @override
   void initState() {
     super.initState();

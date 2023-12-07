@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo_app_project/mobile_storage/shared_pref.dart';
 import 'package:todo_app_project/pages/one_progress_page.dart';
 
@@ -29,7 +28,7 @@ class InProgressPageState extends State<InProgressPage> {
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        decoration: const BoxDecoration(
+        decoration: const BoxDecoration(  //background
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
